@@ -10,19 +10,39 @@
   header { background: #1a1a2e; color: #fff; padding: 16px; position: sticky; top: 0; z-index: 10; }
   header h1 { font-size: 20px; }
   header p { font-size: 13px; color: #f6c453; margin-top: 4px; }
-  .bar { display: flex; gap: 8px; flex-wrap: wrap; padding: 12px; align-items: center; }
-  .bar button, .bar select { padding: 8px 12px; border: 1px solid #ddd; border-radius: 20px; background: #fff; font-size: 14px; cursor: pointer; }
+  .bar { display: flex; gap: 8px; flex-wrap: wrap; padding: 12px; align-items: center; background: #fff; border-bottom: 1px solid #eee; position: sticky; top: 60px; z-index: 9; }
+  .bar button, .bar select, .bar input { padding: 8px 12px; border: 1px solid #ddd; border-radius: 20px; background: #fff; font-size: 14px; cursor: pointer; }
   .bar button.active { background: #1a1a2e; color: #fff; border-color: #1a1a2e; }
   .bar .cart-btn { margin-left: auto; background: #f6c453; border-color: #f6c453; font-weight: bold; }
+  .bar input[type="search"] { flex: 1; min-width: 140px; max-width: 300px; padding: 8px 14px; font-size: 14px; }
+  .ranking { padding: 12px; background: #fff; margin: 12px; border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,.06); }
+  .ranking h2 { font-size: 16px; margin-bottom: 10px; color: #1a1a2e; display: flex; align-items: center; gap: 8px; }
+  .ranking-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; }
+  .rank-item { background: #fafafa; border-radius: 10px; padding: 8px; display: flex; gap: 8px; align-items: center; border: 1px solid #eee; transition: transform .15s, box-shadow .15s; }
+  .rank-item:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,.08); }
+  .rank-num { width: 24px; height: 24px; border-radius: 50%; background: #eee; color: #888; font-size: 12px; font-weight: bold; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .rank-num.gold { background: linear-gradient(135deg, #f6c453, #e8a81c); color: #fff; }
+  .rank-num.silver { background: linear-gradient(135deg, #bdc3c7, #95a5a6); color: #fff; }
+  .rank-num.bronze { background: linear-gradient(135deg, #cd7f32, #b87333); color: #fff; }
+  .rank-info { flex: 1; min-width: 0; }
+  .rank-name { font-size: 13px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .rank-meta { font-size: 11px; color: #888; margin-top: 2px; }
+  .rank-sales { font-size: 12px; color: #e74c3c; font-weight: bold; white-space: nowrap; }
   .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; padding: 0 12px 100px; }
-  .card { background: #fff; border-radius: 12px; overflow: hidden; cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+  .card { background: #fff; border-radius: 12px; overflow: hidden; cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,.06); transition: transform .15s, box-shadow .15s; position: relative; }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 6px 16px rgba(0,0,0,.1); }
   .thumb { height: 110px; display: flex; align-items: center; justify-content: center; font-size: 48px; }
   .card .info { padding: 10px; }
   .card h3 { font-size: 15px; margin-bottom: 4px; }
   .tag { display: inline-block; font-size: 12px; color: #666; background: #f0f0f0; border-radius: 4px; padding: 2px 6px; margin-bottom: 6px; }
   .price { color: #e74c3c; font-weight: bold; font-size: 17px; }
   .stock { font-size: 12px; color: #888; margin-top: 4px; }
-  .card button { width: 100%; margin-top: 8px; padding: 8px; border: none; border-radius: 8px; background: #1a1a2e; color: #fff; font-size: 14px; cursor: pointer; }
+  .card .btn-row { display: flex; gap: 6px; margin-top: 8px; }
+  .card button { flex: 1; padding: 8px; border: none; border-radius: 8px; background: #1a1a2e; color: #fff; font-size: 13px; cursor: pointer; }
+  .card .fav-btn { width: 36px; height: 36px; padding: 0; border-radius: 8px; background: #fff; border: 1px solid #ddd; font-size: 18px; display: flex; align-items: center; justify-content: center; }
+  .card .fav-btn.favorited { background: #fff0f0; border-color: #e74c3c; color: #e74c3c; }
+  .card .fav-btn.favorited::before { content: '❤️'; }
+  .card .fav-btn:not(.favorited)::before { content: '🤍'; }
   .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 20; align-items: flex-end; justify-content: center; }
   .modal.open { display: flex; }
   .sheet { background: #fff; width: 100%; max-width: 560px; border-radius: 16px 16px 0 0; padding: 20px; max-height: 85vh; overflow: auto; }
@@ -47,6 +67,8 @@
   .keybox .kwarn { font-size: 12px; color: #e74c3c; margin-top: 6px; }
   .note { background: #fff8e1; color: #8d6e00; padding: 10px; border-radius: 8px; font-size: 13px; margin: 10px 0; }
   footer { text-align: center; font-size: 12px; color: #999; padding: 16px; }
+  .empty-state { padding: 40px 20px; text-align: center; color: #888; }
+  .empty-state .emoji { font-size: 48px; margin-bottom: 12px; }
 </style>
 </head>
 <body>
@@ -62,12 +84,20 @@
   <button data-cat="outfit">服装</button>
   <button data-cat="emote">表情</button>
   <button data-cat="key">🔑 激活码</button>
+  <button data-cat="favorites">⭐ 我的收藏</button>
+  <input type="search" id="searchInput" placeholder="搜索商品名称..." aria-label="搜索商品">
   <select id="sort">
     <option value="">默认排序</option>
     <option value="price_asc">价格从低到高</option>
     <option value="price_desc">价格从高到低</option>
+    <option value="sales_desc">销量从高到低</option>
   </select>
   <button class="cart-btn" onclick="openCart()">🛒 购物车 (<span id="cartCount">0</span>)</button>
+</div>
+
+<div class="ranking" id="rankingSection">
+  <h2>🏆 销量排行榜 TOP 5</h2>
+  <div class="ranking-grid" id="rankingGrid"></div>
 </div>
 
 <div class="grid" id="grid"></div>
@@ -83,23 +113,107 @@
 <footer>本站为演示网站，所有商品均为虚拟道具 / 激活码展示，下单不产生真实交易与付款。激活码均为演示码，无法真实兑换。</footer>
 
 <script>
-let items = [];
+let allItems = [];
+let filteredItems = [];
 let cat = '';
 let sort = '';
+let searchQuery = '';
+
+// 收藏功能
+const FAV_KEY = 'goods-shop-favorites';
+function getFavorites() {
+  try { return JSON.parse(localStorage.getItem(FAV_KEY) || '[]'); } catch { return []; }
+}
+function setFavorites(favs) {
+  localStorage.setItem(FAV_KEY, JSON.stringify(favs));
+}
+function isFavorited(id) {
+  return getFavorites().includes(id);
+}
+function toggleFavorite(id, btn) {
+  const favs = getFavorites();
+  const idx = favs.indexOf(id);
+  if (idx >= 0) {
+    favs.splice(idx, 1);
+    btn.classList.remove('favorited');
+  } else {
+    favs.push(id);
+    btn.classList.add('favorited');
+  }
+  setFavorites(favs);
+  // 如果当前在收藏分类，重新渲染
+  if (cat === 'favorites') {
+    loadItems();
+  }
+}
+
+async function loadRanking() {
+  try {
+    const r = await fetch('/api/ranking');
+    const d = await r.json();
+    renderRanking(d.items);
+  } catch (e) {
+    console.error('加载排行榜失败', e);
+  }
+}
+
+function renderRanking(items) {
+  const g = document.getElementById('rankingGrid');
+  g.innerHTML = items.map((it, i) => `
+    <div class="rank-item" onclick="showDetail('${it.id}')">
+      <span class="rank-num ${i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : ''}">${i + 1}</span>
+      <div class="rank-info">
+        <div class="rank-name">${it.emoji} ${it.name}</div>
+        <div class="rank-meta">${it.game} · ${it.categoryLabel}</div>
+      </div>
+      <span class="rank-sales">🔥 ${it.sales}</span>
+    </div>`).join('');
+}
 
 async function loadItems() {
-  const q = new URLSearchParams();
-  if (cat) q.set('category', cat);
-  if (sort) q.set('sort', sort);
-  const r = await fetch('/api/items?' + q);
-  const d = await r.json();
-  items = d.items;
+  let list = [...allItems];
+  
+  // 分类筛选
+  if (cat === 'favorites') {
+    const favs = getFavorites();
+    list = list.filter(it => favs.includes(it.id));
+  } else if (cat && cat !== '') {
+    list = list.filter(it => it.category === cat);
+  }
+  
+  // 关键词搜索
+  if (searchQuery) {
+    const q = searchQuery.toLowerCase();
+    list = list.filter(it => 
+      it.name.toLowerCase().includes(q) || 
+      it.game.toLowerCase().includes(q) ||
+      it.categoryLabel.toLowerCase().includes(q) ||
+      (it.desc && it.desc.toLowerCase().includes(q))
+    );
+  }
+  
+  // 排序
+  if (sort === 'price_asc') list.sort((a, b) => a.price - b.price);
+  else if (sort === 'price_desc') list.sort((a, b) => b.price - a.price);
+  else if (sort === 'sales_desc') list.sort((a, b) => (b.sales || 0) - (a.sales || 0));
+  
+  filteredItems = list;
   render();
 }
 
 function render() {
   const g = document.getElementById('grid');
-  g.innerHTML = items.map(it => `
+  const favs = getFavorites();
+  
+  if (filteredItems.length === 0) {
+    let msg = '这个分类暂时没有商品';
+    if (cat === 'favorites') msg = '还没有收藏任何商品，点击商品卡片上的 🤍 收藏吧';
+    else if (searchQuery) msg = `没有找到「${searchQuery}」相关的商品`;
+    g.innerHTML = `<div class="empty-state"><div class="emoji">🔍</div><p>${msg}</p></div>`;
+    return;
+  }
+  
+  g.innerHTML = filteredItems.map(it => `
     <div class="card" onclick="showDetail('${it.id}')">
       <div class="thumb" style="background:${it.color}">${it.emoji}</div>
       <div class="info">
@@ -107,10 +221,15 @@ function render() {
         <span class="tag">${it.game} · ${it.categoryLabel}</span>
         ${it.platform ? `<div class="meta">🎮 ${it.platform} · 适用地区：${it.region}</div>` : ''}
         <div class="price">¥${it.price}</div>
-        <div class="stock">库存 ${it.stock} 件</div>
-        <button onclick="event.stopPropagation(); addToCart('${it.id}')">加入购物车</button>
+        <div class="stock">库存 ${it.stock} 件 · 销量 ${it.sales}</div>
+        <div class="btn-row">
+          <button onclick="event.stopPropagation(); addToCart('${it.id}')">加入购物车</button>
+          <button class="fav-btn ${favs.includes(it.id) ? 'favorited' : ''}" 
+                  onclick="event.stopPropagation(); toggleFavorite('${it.id}', this)"
+                  aria-label="${favs.includes(it.id) ? '取消收藏' : '收藏'}"></button>
+        </div>
       </div>
-    </div>`).join('') || '<p style="padding:20px;color:#888">这个分类暂时没有商品</p>';
+    </div>`).join('');
 }
 
 async function refreshCartCount() {
@@ -128,8 +247,10 @@ async function addToCart(id) {
 }
 
 function showDetail(id) {
-  const it = items.find(x => x.id === id);
+  const it = allItems.find(x => x.id === id);
   if (!it) return;
+  const favs = getFavorites();
+  const isFav = favs.includes(it.id);
   document.getElementById('detailBody').innerHTML = `
     <div class="thumb" style="background:${it.color}">${it.emoji}</div>
     <h2>${it.name}</h2>
@@ -137,7 +258,7 @@ function showDetail(id) {
     ${it.platform ? `<p>🎮 平台：${it.platform} &nbsp;·&nbsp; 适用地区：${it.region}</p>` : ''}
     <p>${it.desc}</p>
     <p class="price" style="font-size:22px">¥${it.price}</p>
-    <p>库存 ${it.stock} 件</p>
+    <p>库存 ${it.stock} 件 · 销量 ${it.sales}</p>
     ${it.category === 'key' ? '<div class="note">激活码商品：下单成功后，在订单成功页查看演示激活码（仅供展示，无法真实兑换）。</div>' : '<div class="note">虚拟道具演示商品，下单不产生真实交易。</div>'}
     <div class="row">
       <button class="ghost" onclick="closeModals()">关闭</button>
@@ -216,8 +337,26 @@ document.querySelectorAll('#filters button[data-cat]').forEach(b => {
 });
 document.getElementById('sort').onchange = (e) => { sort = e.target.value; loadItems(); };
 
-loadItems();
-refreshCartCount();
+// 搜索输入防抖
+let searchDebounce;
+document.getElementById('searchInput').addEventListener('input', (e) => {
+  clearTimeout(searchDebounce);
+  searchDebounce = setTimeout(() => {
+    searchQuery = e.target.value.trim();
+    loadItems();
+  }, 150);
+});
+
+// 初始化
+async function init() {
+  const r = await fetch('/api/items');
+  const d = await r.json();
+  allItems = d.items;
+  loadRanking();
+  loadItems();
+  refreshCartCount();
+}
+init();
 </script>
 </body>
 </html>
