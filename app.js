@@ -40,6 +40,7 @@ function publicItem(it) {
     desc: it.desc,
     platform: it.platform || null,
     region: it.region || null,
+    sales: it.sales || 0,
   };
 }
 
@@ -170,6 +171,15 @@ app.get('/api/orders/:orderNo', (req, res) => {
   const o = orders.find((x) => x.orderNo === req.params.orderNo);
   if (!o) return res.status(404).json({ error: '订单不存在' });
   res.json(o);
+});
+
+// 销量排行榜：前 5
+app.get('/api/ranking', (req, res) => {
+  const list = items
+    .map(publicItem)
+    .sort((a, b) => (b.sales || 0) - (a.sales || 0))
+    .slice(0, 5);
+  res.json({ items: list });
 });
 
 app.listen(PORT, () => {
