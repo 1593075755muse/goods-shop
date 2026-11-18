@@ -18,6 +18,7 @@ const CATEGORIES = {
   crate: '补给箱',
   outfit: '服装',
   emote: '表情',
+  key: '激活码',
 };
 
 // 购物车和订单都放内存，不持久化
@@ -37,7 +38,17 @@ function publicItem(it) {
     emoji: it.emoji,
     color: it.color,
     desc: it.desc,
+    platform: it.platform || null,
+    region: it.region || null,
   };
+}
+
+// 生成演示激活码：XXXXX-XXXXX-XXXXX，仅供展示，无法真实兑换
+const DEMO_KEY_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+function makeDemoKey() {
+  const group = () =>
+    Array.from({ length: 5 }, () => DEMO_KEY_CHARS[Math.floor(Math.random() * DEMO_KEY_CHARS.length)]).join('');
+  return `${group()}-${group()}-${group()}`;
 }
 
 function cartDetail() {
@@ -121,6 +132,19 @@ app.post('/api/orders', (req, res) => {
     items.find((x) => x.id === line.id).stock -= line.qty;
   }
   const orderNo = 'GD' + String(Date.now()).slice(-8) + String(orderSeq++).padStart(2, '0');
+  // 激活码商品：每件生成一个演示激活码（假码，仅供展示）
+  const keys = [];
+  for (const line of detail.items) {
+    const it = items.find((x) => x.id === line.id);
+    if (it && it.category === 'key') {
+      keys.push({
+        id: line.id,
+        name: line.name,
+        qty: line.qty,
+        codes: Array.from({ length: line.qty }, () => makeDemoKey()),
+      });
+    }
+  }
   const order = {
     orderNo,
     items: detail.items,
@@ -128,6 +152,7 @@ app.post('/api/orders', (req, res) => {
     buyer: (req.body && req.body.buyer) || '游客',
     createdAt: new Date().toISOString(),
     demo: true,
+    keys,
   };
   orders.push(order);
   cart.clear();
@@ -136,6 +161,7 @@ app.post('/api/orders', (req, res) => {
     total: order.total,
     message: '下单成功！演示订单，未真实付款',
     note: '演示订单，未真实付款',
+    keys,
   });
 });
 
