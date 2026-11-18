@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>小铺子 · PUBG 游戏道具交易</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background: #f4f5f7; color: #222; }
+  header { background: #1a1a2e; color: #fff; padding: 16px; position: sticky; top: 0; z-index: 10; }
+  header h1 { font-size: 20px; }
+  header p { font-size: 13px; color: #f6c453; margin-top: 4px; }
+  .bar { display: flex; gap: 8px; flex-wrap: wrap; padding: 12px; align-items: center; }
+  .bar button, .bar select { padding: 8px 12px; border: 1px solid #ddd; border-radius: 20px; background: #fff; font-size: 14px; cursor: pointer; }
+  .bar button.active { background: #1a1a2e; color: #fff; border-color: #1a1a2e; }
+  .bar .cart-btn { margin-left: auto; background: #f6c453; border-color: #f6c453; font-weight: bold; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; padding: 0 12px 100px; }
+  .card { background: #fff; border-radius: 12px; overflow: hidden; cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+  .thumb { height: 110px; display: flex; align-items: center; justify-content: center; font-size: 48px; }
+  .card .info { padding: 10px; }
+  .card h3 { font-size: 15px; margin-bottom: 4px; }
+  .tag { display: inline-block; font-size: 12px; color: #666; background: #f0f0f0; border-radius: 4px; padding: 2px 6px; margin-bottom: 6px; }
+  .price { color: #e74c3c; font-weight: bold; font-size: 17px; }
+  .stock { font-size: 12px; color: #888; margin-top: 4px; }
+  .card button { width: 100%; margin-top: 8px; padding: 8px; border: none; border-radius: 8px; background: #1a1a2e; color: #fff; font-size: 14px; cursor: pointer; }
+  .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 20; align-items: flex-end; justify-content: center; }
+  .modal.open { display: flex; }
+  .sheet { background: #fff; width: 100%; max-width: 560px; border-radius: 16px 16px 0 0; padding: 20px; max-height: 85vh; overflow: auto; }
+  .sheet .thumb { height: 140px; border-radius: 12px; font-size: 64px; margin-bottom: 12px; }
+  .sheet h2 { font-size: 19px; margin-bottom: 6px; }
+  .sheet p { font-size: 14px; color: #555; line-height: 1.6; margin: 8px 0; }
+  .sheet .row { display: flex; gap: 8px; margin-top: 14px; }
+  .sheet .row button { flex: 1; padding: 12px; border-radius: 10px; border: none; font-size: 15px; cursor: pointer; }
+  .primary { background: #f6c453; font-weight: bold; }
+  .ghost { background: #eee; }
+  .cart-line { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; font-size: 14px; }
+  .total { font-size: 17px; font-weight: bold; margin: 12px 0; text-align: right; }
+  input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; margin: 6px 0; font-size: 14px; }
+  .ok { text-align: center; padding: 16px 0; }
+  .ok .big { font-size: 48px; }
+  .ok h2 { margin: 8px 0; }
+  .ok .no { font-size: 18px; color: #e74c3c; font-weight: bold; margin: 6px 0; }
+  .note { background: #fff8e1; color: #8d6e00; padding: 10px; border-radius: 8px; font-size: 13px; margin: 10px 0; }
+  footer { text-align: center; font-size: 12px; color: #999; padding: 16px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>🛒 小铺子 · PUBG 道具交易</h1>
+  <p>演示小站 · 不接真实支付 · 下单只是演示</p>
+</header>
+
+<div class="bar" id="filters">
+  <button data-cat="" class="active">全部</button>
+  <button data-cat="skin">武器皮肤</button>
+  <button data-cat="crate">补给箱</button>
+  <button data-cat="outfit">服装</button>
+  <button data-cat="emote">表情</button>
+  <select id="sort">
+    <option value="">默认排序</option>
+    <option value="price_asc">价格从低到高</option>
+    <option value="price_desc">价格从高到低</option>
+  </select>
+  <button class="cart-btn" onclick="openCart()">🛒 购物车 (<span id="cartCount">0</span>)</button>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<div class="modal" id="detailModal">
+  <div class="sheet" id="detailBody"></div>
+</div>
+
+<div class="modal" id="cartModal">
+  <div class="sheet" id="cartBody"></div>
+</div>
+
+<footer>本站为演示网站，所有商品均为虚拟道具展示，下单不产生真实交易与付款。</footer>
+
+<script>
+let items = [];
+let cat = '';
+let sort = '';
+
+async function loadItems() {
+  const q = new URLSearchParams();
+  if (cat) q.set('category', cat);
+  if (sort) q.set('sort', sort);
+  const r = await fetch('/api/items?' + q);
+  const d = await r.json();
+  items = d.items;
+  render();
+}
+
+function render() {
+  const g = document.getElementById('grid');
+  g.innerHTML = items.map(it => `
+    <div class="card" onclick="showDetail('${it.id}')">
+      <div class="thumb" style="background:${it.color}">${it.emoji}</div>
+      <div class="info">
+        <h3>${it.name}</h3>
+        <span class="tag">${it.game} · ${it.categoryLabel}</span>
+        <div class="price">¥${it.price}</div>
+        <div class="stock">库存 ${it.stock} 件</div>
+        <button onclick="event.stopPropagation(); addToCart('${it.id}')">加入购物车</button>
+      </div>
+    </div>`).join('') || '<p style="padding:20px;color:#888">这个分类暂时没有商品</p>';
+}
+
+async function refreshCartCount() {
+  const r = await fetch('/api/cart');
+  const d = await r.json();
+  document.getElementById('cartCount').textContent = d.items.reduce((s, x) => s + x.qty, 0);
+}
+
+async function addToCart(id) {
+  const r = await fetch('/api/cart', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id, qty: 1 }) });
+  const d = await r.json();
+  if (!r.ok) { alert(d.error || '加入失败'); return; }
+  refreshCartCount();
+  alert('已加入购物车');
+}
+
+function showDetail(id) {
+  const it = items.find(x => x.id === id);
+  if (!it) return;
+  document.getElementById('detailBody').innerHTML = `
+    <div class="thumb" style="background:${it.color}">${it.emoji}</div>
+    <h2>${it.name}</h2>
+    <span class="tag">${it.game} · ${it.categoryLabel}</span>
+    <p>${it.desc}</p>
+    <p class="price" style="font-size:22px">¥${it.price}</p>
+    <p>库存 ${it.stock} 件</p>
+    <div class="note">虚拟道具演示商品，下单不产生真实交易。</div>
+    <div class="row">
+      <button class="ghost" onclick="closeModals()">关闭</button>
+      <button class="primary" onclick="addToCart('${it.id}'); closeModals();">加入购物车</button>
+    </div>`;
+  document.getElementById('detailModal').classList.add('open');
+}
+
+async function openCart() {
+  const r = await fetch('/api/cart');
+  const d = await r.json();
+  const lines = d.items.map(x => `
+    <div class="cart-line">
+      <span>${x.emoji} ${x.name} × ${x.qty}</span>
+      <span>¥${x.subtotal} <a href="javascript:removeItem('${x.id}')" style="color:#e74c3c">移除</a></span>
+    </div>`).join('') || '<p style="color:#888;padding:12px 0">购物车是空的</p>';
+  document.getElementById('cartBody').innerHTML = `
+    <h2>🛒 我的购物车</h2>
+    ${lines}
+    <div class="total">合计：¥${d.total}</div>
+    <input id="buyer" placeholder="收货人昵称（可不填）">
+    <div class="note">演示下单，不接真实支付，不会真的扣钱。</div>
+    <div class="row">
+      <button class="ghost" onclick="closeModals()">继续逛逛</button>
+      <button class="primary" onclick="checkout()" ${d.items.length ? '' : 'disabled'}>下单</button>
+    </div>`;
+  document.getElementById('cartModal').classList.add('open');
+}
+
+async function removeItem(id) {
+  await fetch('/api/cart/' + id, { method: 'DELETE' });
+  refreshCartCount();
+  openCart();
+}
+
+async function checkout() {
+  const buyer = (document.getElementById('buyer') || {}).value || '游客';
+  const r = await fetch('/api/orders', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ buyer }) });
+  const d = await r.json();
+  if (!r.ok) { alert(d.error || '下单失败'); return; }
+  refreshCartCount();
+  loadItems();
+  document.getElementById('cartBody').innerHTML = `
+    <div class="ok">
+      <div class="big">✅</div>
+      <h2>下单成功！</h2>
+      <div class="no">订单号：${d.orderNo}</div>
+      <p>实付金额：¥${d.total}</p>
+      <p style="color:#e74c3c;font-weight:bold;margin-top:8px">演示订单，未真实付款</p>
+      <div class="row" style="margin-top:16px"><button class="primary" onclick="closeModals()">好的</button></div>
+    </div>`;
+}
+
+function closeModals() {
+  document.querySelectorAll('.modal').forEach(m => m.classList.remove('open'));
+}
+
+document.querySelectorAll('#filters button[data-cat]').forEach(b => {
+  b.onclick = () => {
+    document.querySelectorAll('#filters button[data-cat]').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    cat = b.dataset.cat;
+    loadItems();
+  };
+});
+document.getElementById('sort').onchange = (e) => { sort = e.target.value; loadItems(); };
+
+loadItems();
+refreshCartCount();
+</script>
+</body>
+</html>
