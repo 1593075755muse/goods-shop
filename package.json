@@ -1,0 +1,1 @@
+{"dependencies":{"express":"^4.19.2"},"description":"小小的 PUBG 游戏道具交易网站（演示站，无真实支付）","engines":{"node":">=18"},"main":"app.js","name":"goods-shop","scripts":{"start":"node app.js"},"version":"1.0.0"}
