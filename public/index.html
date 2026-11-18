@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>小铺子 · PUBG 游戏道具交易</title>
+<title>小铺子 · 游戏道具与激活码交易</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background: #f4f5f7; color: #222; }
@@ -40,14 +40,19 @@
   .ok .big { font-size: 48px; }
   .ok h2 { margin: 8px 0; }
   .ok .no { font-size: 18px; color: #e74c3c; font-weight: bold; margin: 6px 0; }
+  .meta { font-size: 12px; color: #2e86c1; margin-bottom: 6px; }
+  .keybox { background: #f4f6f7; border: 1px dashed #bbb; border-radius: 8px; padding: 10px; margin: 10px 0; text-align: left; }
+  .keybox .kname { font-size: 14px; font-weight: bold; margin-bottom: 6px; }
+  .keybox code { display: block; font-size: 16px; letter-spacing: 1px; padding: 4px 0; }
+  .keybox .kwarn { font-size: 12px; color: #e74c3c; margin-top: 6px; }
   .note { background: #fff8e1; color: #8d6e00; padding: 10px; border-radius: 8px; font-size: 13px; margin: 10px 0; }
   footer { text-align: center; font-size: 12px; color: #999; padding: 16px; }
 </style>
 </head>
 <body>
 <header>
-  <h1>🛒 小铺子 · PUBG 道具交易</h1>
-  <p>演示小站 · 不接真实支付 · 下单只是演示</p>
+  <h1>🛒 小铺子 · 游戏道具与激活码交易</h1>
+  <p>演示小站 · PUBG 道具 + Steam 激活码 · 不接真实支付 · 下单只是演示</p>
 </header>
 
 <div class="bar" id="filters">
@@ -56,6 +61,7 @@
   <button data-cat="crate">补给箱</button>
   <button data-cat="outfit">服装</button>
   <button data-cat="emote">表情</button>
+  <button data-cat="key">🔑 激活码</button>
   <select id="sort">
     <option value="">默认排序</option>
     <option value="price_asc">价格从低到高</option>
@@ -74,7 +80,7 @@
   <div class="sheet" id="cartBody"></div>
 </div>
 
-<footer>本站为演示网站，所有商品均为虚拟道具展示，下单不产生真实交易与付款。</footer>
+<footer>本站为演示网站，所有商品均为虚拟道具 / 激活码展示，下单不产生真实交易与付款。激活码均为演示码，无法真实兑换。</footer>
 
 <script>
 let items = [];
@@ -99,6 +105,7 @@ function render() {
       <div class="info">
         <h3>${it.name}</h3>
         <span class="tag">${it.game} · ${it.categoryLabel}</span>
+        ${it.platform ? `<div class="meta">🎮 ${it.platform} · 适用地区：${it.region}</div>` : ''}
         <div class="price">¥${it.price}</div>
         <div class="stock">库存 ${it.stock} 件</div>
         <button onclick="event.stopPropagation(); addToCart('${it.id}')">加入购物车</button>
@@ -127,10 +134,11 @@ function showDetail(id) {
     <div class="thumb" style="background:${it.color}">${it.emoji}</div>
     <h2>${it.name}</h2>
     <span class="tag">${it.game} · ${it.categoryLabel}</span>
+    ${it.platform ? `<p>🎮 平台：${it.platform} &nbsp;·&nbsp; 适用地区：${it.region}</p>` : ''}
     <p>${it.desc}</p>
     <p class="price" style="font-size:22px">¥${it.price}</p>
     <p>库存 ${it.stock} 件</p>
-    <div class="note">虚拟道具演示商品，下单不产生真实交易。</div>
+    ${it.category === 'key' ? '<div class="note">激活码商品：下单成功后，在订单成功页查看演示激活码（仅供展示，无法真实兑换）。</div>' : '<div class="note">虚拟道具演示商品，下单不产生真实交易。</div>'}
     <div class="row">
       <button class="ghost" onclick="closeModals()">关闭</button>
       <button class="primary" onclick="addToCart('${it.id}'); closeModals();">加入购物车</button>
@@ -172,6 +180,16 @@ async function checkout() {
   if (!r.ok) { alert(d.error || '下单失败'); return; }
   refreshCartCount();
   loadItems();
+  const keysHtml = (d.keys && d.keys.length) ? `
+    <div style="text-align:left;margin-top:12px">
+      <h3 style="margin-bottom:4px">🔑 您的激活码</h3>
+      ${d.keys.map(k => `
+        <div class="keybox">
+          <div class="kname">${k.name} × ${k.qty}</div>
+          ${k.codes.map(c => `<code>${c}</code>`).join('')}
+          <div class="kwarn">演示激活码，仅供展示，无法真实兑换</div>
+        </div>`).join('')}
+    </div>` : '';
   document.getElementById('cartBody').innerHTML = `
     <div class="ok">
       <div class="big">✅</div>
@@ -179,6 +197,7 @@ async function checkout() {
       <div class="no">订单号：${d.orderNo}</div>
       <p>实付金额：¥${d.total}</p>
       <p style="color:#e74c3c;font-weight:bold;margin-top:8px">演示订单，未真实付款</p>
+      ${keysHtml}
       <div class="row" style="margin-top:16px"><button class="primary" onclick="closeModals()">好的</button></div>
     </div>`;
 }
