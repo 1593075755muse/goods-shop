@@ -2,359 +2,482 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>小铺子 · 游戏道具与激活码交易</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>小铺子 · 数字卡密自动交易平台</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background: #f4f5f7; color: #222; }
-  header { background: #1a1a2e; color: #fff; padding: 16px; position: sticky; top: 0; z-index: 10; }
-  header h1 { font-size: 20px; }
-  header p { font-size: 13px; color: #f6c453; margin-top: 4px; }
-  .bar { display: flex; gap: 8px; flex-wrap: wrap; padding: 12px; align-items: center; background: #fff; border-bottom: 1px solid #eee; position: sticky; top: 60px; z-index: 9; }
-  .bar button, .bar select, .bar input { padding: 8px 12px; border: 1px solid #ddd; border-radius: 20px; background: #fff; font-size: 14px; cursor: pointer; }
-  .bar button.active { background: #1a1a2e; color: #fff; border-color: #1a1a2e; }
-  .bar .cart-btn { margin-left: auto; background: #f6c453; border-color: #f6c453; font-weight: bold; }
-  .bar input[type="search"] { flex: 1; min-width: 140px; max-width: 300px; padding: 8px 14px; font-size: 14px; }
-  .ranking { padding: 12px; background: #fff; margin: 12px; border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,.06); }
-  .ranking h2 { font-size: 16px; margin-bottom: 10px; color: #1a1a2e; display: flex; align-items: center; gap: 8px; }
-  .ranking-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; }
-  .rank-item { background: #fafafa; border-radius: 10px; padding: 8px; display: flex; gap: 8px; align-items: center; border: 1px solid #eee; transition: transform .15s, box-shadow .15s; }
-  .rank-item:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,.08); }
-  .rank-num { width: 24px; height: 24px; border-radius: 50%; background: #eee; color: #888; font-size: 12px; font-weight: bold; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-  .rank-num.gold { background: linear-gradient(135deg, #f6c453, #e8a81c); color: #fff; }
-  .rank-num.silver { background: linear-gradient(135deg, #bdc3c7, #95a5a6); color: #fff; }
-  .rank-num.bronze { background: linear-gradient(135deg, #cd7f32, #b87333); color: #fff; }
-  .rank-info { flex: 1; min-width: 0; }
-  .rank-name { font-size: 13px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .rank-meta { font-size: 11px; color: #888; margin-top: 2px; }
-  .rank-sales { font-size: 12px; color: #e74c3c; font-weight: bold; white-space: nowrap; }
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; padding: 0 12px 100px; }
-  .card { background: #fff; border-radius: 12px; overflow: hidden; cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,.06); transition: transform .15s, box-shadow .15s; position: relative; }
-  .card:hover { transform: translateY(-3px); box-shadow: 0 6px 16px rgba(0,0,0,.1); }
-  .thumb { height: 110px; display: flex; align-items: center; justify-content: center; font-size: 48px; }
-  .card .info { padding: 10px; }
-  .card h3 { font-size: 15px; margin-bottom: 4px; }
-  .tag { display: inline-block; font-size: 12px; color: #666; background: #f0f0f0; border-radius: 4px; padding: 2px 6px; margin-bottom: 6px; }
-  .price { color: #e74c3c; font-weight: bold; font-size: 17px; }
-  .stock { font-size: 12px; color: #888; margin-top: 4px; }
-  .card .btn-row { display: flex; gap: 6px; margin-top: 8px; }
-  .card button { flex: 1; padding: 8px; border: none; border-radius: 8px; background: #1a1a2e; color: #fff; font-size: 13px; cursor: pointer; }
-  .card .fav-btn { width: 36px; height: 36px; padding: 0; border-radius: 8px; background: #fff; border: 1px solid #ddd; font-size: 18px; display: flex; align-items: center; justify-content: center; }
-  .card .fav-btn.favorited { background: #fff0f0; border-color: #e74c3c; color: #e74c3c; }
-  .card .fav-btn.favorited::before { content: '❤️'; }
-  .card .fav-btn:not(.favorited)::before { content: '🤍'; }
-  .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 20; align-items: flex-end; justify-content: center; }
+  body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background: #f5f5f5; color: #222; }
+  a { color: inherit; text-decoration: none; }
+  button { font-family: inherit; cursor: pointer; }
+  /* 顶部导航：橙色渐变 */
+  .topbar { background: linear-gradient(90deg, #ff7a18, #ff9a3d); color: #fff; padding: 12px 14px; display: flex; align-items: center; gap: 10px; position: sticky; top: 0; z-index: 30; }
+  .topbar .logo { font-size: 17px; font-weight: bold; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .topbar .logo small { display: block; font-size: 11px; font-weight: normal; opacity: .9; }
+  .topbar .obtn { background: rgba(255,255,255,.22); color: #fff; border: 1px solid rgba(255,255,255,.5); border-radius: 16px; padding: 6px 12px; font-size: 13px; white-space: nowrap; }
+  .topbar .menu-btn { background: none; border: none; color: #fff; font-size: 22px; line-height: 1; padding: 4px; }
+  /* 店铺头 */
+  .shop-head { background: #fff; padding: 14px; display: flex; align-items: center; gap: 12px; }
+  .avatar { width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg, #ffb347, #ff7a18); display: flex; align-items: center; justify-content: center; font-size: 30px; flex-shrink: 0; }
+  .shop-info { flex: 1; min-width: 0; }
+  .shop-info h1 { font-size: 18px; }
+  .shop-info p { font-size: 12px; color: #999; margin-top: 4px; }
+  .contact-btn { background: #fff; border: 1px solid #ff7a18; color: #ff7a18; border-radius: 18px; padding: 7px 14px; font-size: 13px; white-space: nowrap; }
+  /* 公告跑马灯 */
+  .marquee { background: #fff7ed; border-top: 1px solid #ffedd5; padding: 8px 14px; font-size: 13px; color: #c2410c; display: flex; gap: 8px; align-items: center; overflow: hidden; }
+  .marquee span { white-space: nowrap; animation: scroll 18s linear infinite; display: inline-block; }
+  @keyframes scroll { from { transform: translateX(100%);} to { transform: translateX(-100%);} }
+  /* 页签 */
+  .tabs { display: flex; background: #fff; border-bottom: 1px solid #eee; position: sticky; top: 57px; z-index: 20; }
+  .tabs button { flex: 1; padding: 12px 0; background: none; border: none; font-size: 15px; color: #666; }
+  .tabs button.active { color: #ff7a18; font-weight: bold; border-bottom: 2px solid #ff7a18; }
+  /* 分类横向滚动 */
+  .cats { display: flex; gap: 8px; padding: 12px 12px 4px; overflow-x: auto; scrollbar-width: none; background: #f5f5f5; }
+  .cats::-webkit-scrollbar { display: none; }
+  .cats button { flex-shrink: 0; padding: 7px 14px; border-radius: 16px; border: 1px solid #e5e5e5; background: #fff; font-size: 13px; color: #555; }
+  .cats button.active { background: #ff7a18; color: #fff; border-color: #ff7a18; }
+  .cats button .n { opacity: .7; font-size: 11px; }
+  /* 商品网格：两列 */
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 10px 12px 90px; }
+  .card { background: #fff; border-radius: 12px; overflow: hidden; cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,.05); position: relative; }
+  .thumb { height: 130px; display: flex; align-items: center; justify-content: center; font-size: 56px; }
+  .card .info { padding: 8px 10px 10px; }
+  .card h3 { font-size: 14px; line-height: 1.35; height: 38px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+  .card h3 .oos { color: #999; font-size: 12px; }
+  .tag-auto { display: inline-block; font-size: 11px; color: #16a34a; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 4px; padding: 1px 5px; margin-top: 5px; }
+  .price { color: #e60012; font-weight: bold; font-size: 18px; margin-top: 4px; }
+  .price small { font-size: 12px; }
+  .meta-line { font-size: 11px; color: #999; margin-top: 2px; }
+  /* 详情页 */
+  .detail-top { background: #fff; padding: 12px 14px; display: flex; align-items: center; gap: 10px; position: sticky; top: 0; z-index: 30; border-bottom: 1px solid #eee; }
+  .detail-top button { background: none; border: none; font-size: 20px; }
+  .detail-top h2 { font-size: 16px; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .detail-poster { height: 220px; display: flex; align-items: center; justify-content: center; font-size: 96px; }
+  .detail-body { background: #fff; padding: 14px; }
+  .detail-body h2 { font-size: 18px; line-height: 1.4; }
+  .detail-body .price { font-size: 24px; margin: 8px 0; }
+  .shop-row { display: flex; align-items: center; gap: 10px; background: #fff; margin: 10px 0; padding: 12px 14px; border-radius: 12px; }
+  .shop-row .avatar { width: 40px; height: 40px; font-size: 22px; }
+  .shop-row .nm { flex: 1; font-size: 15px; font-weight: bold; }
+  .shop-row button { border: 1px solid #ff7a18; color: #ff7a18; background: #fff; border-radius: 14px; padding: 5px 12px; font-size: 12px; }
+  .desc-box { background: #fff; margin: 0 0 10px; padding: 14px; border-radius: 12px; }
+  .desc-box h3 { font-size: 15px; margin-bottom: 8px; }
+  .desc-box .warn { color: #e60012; font-size: 14px; line-height: 1.7; white-space: pre-line; }
+  .desc-box p { font-size: 14px; color: #555; line-height: 1.7; }
+  .rec-title { font-size: 15px; font-weight: bold; padding: 4px 14px 8px; }
+  /* 底部操作栏 */
+  .buybar { position: fixed; left: 0; right: 0; bottom: 0; background: #fff; border-top: 1px solid #eee; display: flex; align-items: center; padding: 10px 12px calc(10px + env(safe-area-inset-bottom)); gap: 8px; z-index: 30; }
+  .buybar .bb { background: none; border: none; font-size: 12px; color: #666; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 0 8px; }
+  .buybar .bb span { font-size: 20px; }
+  .buybar .buy-now { flex: 1; border: none; border-radius: 22px; padding: 12px; font-size: 16px; font-weight: bold; color: #fff; background: linear-gradient(90deg, #ff7a18, #ff9a3d); }
+  .buybar .buy-now:disabled { background: #ccc; }
+  /* 底部弹窗 */
+  .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 40; align-items: flex-end; justify-content: center; }
   .modal.open { display: flex; }
-  .sheet { background: #fff; width: 100%; max-width: 560px; border-radius: 16px 16px 0 0; padding: 20px; max-height: 85vh; overflow: auto; }
-  .sheet .thumb { height: 140px; border-radius: 12px; font-size: 64px; margin-bottom: 12px; }
-  .sheet h2 { font-size: 19px; margin-bottom: 6px; }
-  .sheet p { font-size: 14px; color: #555; line-height: 1.6; margin: 8px 0; }
-  .sheet .row { display: flex; gap: 8px; margin-top: 14px; }
-  .sheet .row button { flex: 1; padding: 12px; border-radius: 10px; border: none; font-size: 15px; cursor: pointer; }
-  .primary { background: #f6c453; font-weight: bold; }
-  .ghost { background: #eee; }
-  .cart-line { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; font-size: 14px; }
-  .total { font-size: 17px; font-weight: bold; margin: 12px 0; text-align: right; }
-  input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; margin: 6px 0; font-size: 14px; }
-  .ok { text-align: center; padding: 16px 0; }
-  .ok .big { font-size: 48px; }
-  .ok h2 { margin: 8px 0; }
-  .ok .no { font-size: 18px; color: #e74c3c; font-weight: bold; margin: 6px 0; }
-  .meta { font-size: 12px; color: #2e86c1; margin-bottom: 6px; }
-  .keybox { background: #f4f6f7; border: 1px dashed #bbb; border-radius: 8px; padding: 10px; margin: 10px 0; text-align: left; }
-  .keybox .kname { font-size: 14px; font-weight: bold; margin-bottom: 6px; }
-  .keybox code { display: block; font-size: 16px; letter-spacing: 1px; padding: 4px 0; }
-  .keybox .kwarn { font-size: 12px; color: #e74c3c; margin-top: 6px; }
-  .note { background: #fff8e1; color: #8d6e00; padding: 10px; border-radius: 8px; font-size: 13px; margin: 10px 0; }
-  footer { text-align: center; font-size: 12px; color: #999; padding: 16px; }
-  .empty-state { padding: 40px 20px; text-align: center; color: #888; }
-  .empty-state .emoji { font-size: 48px; margin-bottom: 12px; }
+  .sheet { background: #fff; width: 100%; max-width: 600px; border-radius: 16px 16px 0 0; padding: 16px 16px calc(16px + env(safe-area-inset-bottom)); max-height: 88vh; overflow: auto; }
+  .sheet .grab { width: 40px; height: 4px; background: #ddd; border-radius: 2px; margin: 0 auto 12px; }
+  .sheet h2 { font-size: 17px; margin-bottom: 10px; }
+  .sheet h3 { font-size: 15px; margin: 14px 0 6px; }
+  .mini-goods { display: flex; gap: 10px; align-items: center; }
+  .mini-goods .thumb { width: 64px; height: 64px; border-radius: 8px; font-size: 32px; flex-shrink: 0; }
+  .mini-goods .t { flex: 1; min-width: 0; }
+  .mini-goods .t b { font-size: 14px; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .desc-scroll { background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 10px; max-height: 110px; overflow: auto; font-size: 13px; color: #e60012; line-height: 1.6; white-space: pre-line; margin-top: 12px; }
+  .stepper { display: flex; align-items: center; gap: 0; margin-top: 6px; }
+  .stepper button { width: 34px; height: 34px; border: 1px solid #ddd; background: #fff; font-size: 18px; }
+  .stepper button:disabled { color: #ccc; }
+  .stepper .qty { width: 48px; text-align: center; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; line-height: 32px; font-size: 15px; }
+  input[type="text"], input[type="email"], textarea { width: 100%; padding: 11px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; margin-top: 6px; }
+  .hint { font-size: 12px; color: #999; margin-top: 4px; line-height: 1.5; }
+  .pay-methods { display: flex; gap: 10px; margin-top: 8px; }
+  .pay-methods button { flex: 1; padding: 12px; border-radius: 10px; border: 1px solid #ddd; background: #fff; font-size: 15px; }
+  .pay-methods button.sel { border-color: #ff7a18; color: #ff7a18; background: #fff7ed; font-weight: bold; }
+  .sheet .foot { display: flex; align-items: center; gap: 10px; margin-top: 16px; }
+  .sheet .foot .total { flex: 1; font-size: 15px; }
+  .sheet .foot .total b { color: #e60012; font-size: 20px; }
+  .btn-orange { border: none; border-radius: 22px; padding: 12px 26px; font-size: 16px; font-weight: bold; color: #fff; background: linear-gradient(90deg, #ff7a18, #ff9a3d); }
+  .btn-orange:disabled { background: #ccc; }
+  .btn-ghost { border: 1px solid #ddd; border-radius: 22px; padding: 11px 20px; font-size: 15px; background: #fff; }
+  /* 支付页 */
+  .pay-qr { text-align: center; padding: 10px 0; }
+  .pay-qr img { width: 220px; height: 220px; object-fit: contain; border: 1px solid #eee; border-radius: 12px; }
+  .pay-qr .noqr { width: 220px; height: 220px; margin: 0 auto; border: 1px dashed #ccc; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #999; font-size: 14px; padding: 20px; line-height: 1.6; }
+  .order-no { text-align: center; font-size: 15px; margin: 6px 0; }
+  .order-no b { color: #e60012; }
+  /* 卡密盒 */
+  .keybox { background: #f4f6f7; border: 1px dashed #bbb; border-radius: 8px; padding: 12px; margin: 10px 0; }
+  .keybox code { display: block; font-size: 17px; letter-spacing: 1px; padding: 6px 0; word-break: break-all; }
+  .keybox .kwarn { font-size: 12px; color: #e60012; margin-top: 6px; }
+  .keybox button { margin-top: 6px; border: 1px solid #ff7a18; color: #ff7a18; background: #fff; border-radius: 14px; padding: 5px 14px; font-size: 13px; }
+  .status-pill { display: inline-block; font-size: 12px; border-radius: 10px; padding: 2px 8px; }
+  .st-pending { background: #fef3c7; color: #92400e; }
+  .st-paid { background: #dbeafe; color: #1e40af; }
+  .st-delivered { background: #dcfce7; color: #166534; }
+  .st-cancelled { background: #fee2e2; color: #991b1b; }
+  .order-card { background: #fff; border-radius: 12px; padding: 14px; margin: 10px 12px; cursor: pointer; }
+  .order-card .row1 { display: flex; justify-content: space-between; align-items: center; }
+  .order-card .nm { font-size: 15px; font-weight: bold; }
+  .order-card .sub { font-size: 13px; color: #888; margin-top: 6px; line-height: 1.6; }
+  /* 商家页 */
+  .seller-card { background: #fff; border-radius: 12px; padding: 16px; margin: 12px; }
+  .seller-card h3 { font-size: 15px; margin-bottom: 8px; }
+  .seller-card p { font-size: 14px; color: #555; line-height: 1.8; white-space: pre-line; }
+  /* 搜索条 */
+  .search-wrap { background: #fff; padding: 12px; display: flex; gap: 8px; }
+  .search-wrap input { flex: 1; margin-top: 0; }
+  .search-wrap button { border: none; border-radius: 8px; padding: 0 18px; color: #fff; background: linear-gradient(90deg, #ff7a18, #ff9a3d); font-size: 15px; }
+  .empty { text-align: center; color: #999; padding: 48px 20px; font-size: 14px; line-height: 1.8; }
+  .note { background: #fff8e1; color: #8d6e00; padding: 10px; border-radius: 8px; font-size: 13px; margin: 10px 0; line-height: 1.6; }
+  footer { text-align: center; font-size: 12px; color: #aaa; padding: 18px 12px 90px; line-height: 1.8; }
+  .menu-item { display: block; width: 100%; text-align: left; padding: 14px 4px; background: none; border: none; border-bottom: 1px solid #f0f0f0; font-size: 15px; }
 </style>
 </head>
 <body>
-<header>
-  <h1>🛒 小铺子 · 游戏道具与激活码交易</h1>
-  <p>演示小站 · PUBG 道具 + Steam 激活码 · 不接真实支付 · 下单只是演示</p>
-</header>
-
-<div class="bar" id="filters">
-  <button data-cat="" class="active">全部</button>
-  <button data-cat="skin">武器皮肤</button>
-  <button data-cat="crate">补给箱</button>
-  <button data-cat="outfit">服装</button>
-  <button data-cat="emote">表情</button>
-  <button data-cat="key">🔑 激活码</button>
-  <button data-cat="favorites">⭐ 我的收藏</button>
-  <input type="search" id="searchInput" placeholder="搜索商品名称..." aria-label="搜索商品">
-  <select id="sort">
-    <option value="">默认排序</option>
-    <option value="price_asc">价格从低到高</option>
-    <option value="price_desc">价格从高到低</option>
-    <option value="sales_desc">销量从高到低</option>
-  </select>
-  <button class="cart-btn" onclick="openCart()">🛒 购物车 (<span id="cartCount">0</span>)</button>
-</div>
-
-<div class="ranking" id="rankingSection">
-  <h2>🏆 销量排行榜 TOP 5</h2>
-  <div class="ranking-grid" id="rankingGrid"></div>
-</div>
-
-<div class="grid" id="grid"></div>
-
-<div class="modal" id="detailModal">
-  <div class="sheet" id="detailBody"></div>
-</div>
-
-<div class="modal" id="cartModal">
-  <div class="sheet" id="cartBody"></div>
-</div>
-
-<footer>本站为演示网站，所有商品均为虚拟道具 / 激活码展示，下单不产生真实交易与付款。激活码均为演示码，无法真实兑换。</footer>
+<div id="app"></div>
+<div class="modal" id="modal"><div class="sheet" id="sheet"></div></div>
 
 <script>
+let SETTINGS = {};
 let allItems = [];
-let filteredItems = [];
-let cat = '';
-let sort = '';
+let catCounts = {};
+let curCat = '';
 let searchQuery = '';
+let curTab = 'goods'; // goods | seller | search
+let detailId = null;
+let buyState = null; // {item, qty, email, payMethod}
+let currentOrder = null;
 
-// 收藏功能
-const FAV_KEY = 'goods-shop-favorites';
-function getFavorites() {
-  try { return JSON.parse(localStorage.getItem(FAV_KEY) || '[]'); } catch { return []; }
+const $ = (s) => document.querySelector(s);
+function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+function statusLabel(s) {
+  return { pending: '待付款', paid: '待确认收款', delivered: '已发货', cancelled: '已取消' }[s] || s;
 }
-function setFavorites(favs) {
-  localStorage.setItem(FAV_KEY, JSON.stringify(favs));
-}
-function isFavorited(id) {
-  return getFavorites().includes(id);
-}
-function toggleFavorite(id, btn) {
-  const favs = getFavorites();
-  const idx = favs.indexOf(id);
-  if (idx >= 0) {
-    favs.splice(idx, 1);
-    btn.classList.remove('favorited');
-  } else {
-    favs.push(id);
-    btn.classList.add('favorited');
-  }
-  setFavorites(favs);
-  // 如果当前在收藏分类，重新渲染
-  if (cat === 'favorites') {
-    loadItems();
-  }
+function statusClass(s) { return 'status-pill st-' + s; }
+
+async function api(path, opts) {
+  const r = await fetch(path, opts);
+  const d = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(d.error || '请求失败');
+  return d;
 }
 
-async function loadRanking() {
-  try {
-    const r = await fetch('/api/ranking');
-    const d = await r.json();
-    renderRanking(d.items);
-  } catch (e) {
-    console.error('加载排行榜失败', e);
-  }
-}
-
-function renderRanking(items) {
-  const g = document.getElementById('rankingGrid');
-  g.innerHTML = items.map((it, i) => `
-    <div class="rank-item" onclick="showDetail('${it.id}')">
-      <span class="rank-num ${i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : ''}">${i + 1}</span>
-      <div class="rank-info">
-        <div class="rank-name">${it.emoji} ${it.name}</div>
-        <div class="rank-meta">${it.game} · ${it.categoryLabel}</div>
-      </div>
-      <span class="rank-sales">🔥 ${it.sales}</span>
-    </div>`).join('');
-}
-
-async function loadItems() {
-  let list = [...allItems];
-  
-  // 分类筛选
-  if (cat === 'favorites') {
-    const favs = getFavorites();
-    list = list.filter(it => favs.includes(it.id));
-  } else if (cat && cat !== '') {
-    list = list.filter(it => it.category === cat);
-  }
-  
-  // 关键词搜索
-  if (searchQuery) {
+// ---------- 首页 ----------
+function renderHome() {
+  const cats = [['', '综合'], ...Object.entries({ skin: '武器皮肤', crate: '补给箱', outfit: '服装', emote: '表情', key: '激活码' })];
+  let list = allItems;
+  if (curTab === 'goods' && curCat) list = list.filter((it) => it.category === curCat);
+  if (curTab === 'search' && searchQuery) {
     const q = searchQuery.toLowerCase();
-    list = list.filter(it => 
-      it.name.toLowerCase().includes(q) || 
-      it.game.toLowerCase().includes(q) ||
-      it.categoryLabel.toLowerCase().includes(q) ||
-      (it.desc && it.desc.toLowerCase().includes(q))
-    );
+    list = list.filter((it) => it.name.toLowerCase().includes(q) || it.game.toLowerCase().includes(q) || (it.desc || '').toLowerCase().includes(q));
   }
-  
-  // 排序
-  if (sort === 'price_asc') list.sort((a, b) => a.price - b.price);
-  else if (sort === 'price_desc') list.sort((a, b) => b.price - a.price);
-  else if (sort === 'sales_desc') list.sort((a, b) => (b.sales || 0) - (a.sales || 0));
-  
-  filteredItems = list;
-  render();
-}
-
-function render() {
-  const g = document.getElementById('grid');
-  const favs = getFavorites();
-  
-  if (filteredItems.length === 0) {
-    let msg = '这个分类暂时没有商品';
-    if (cat === 'favorites') msg = '还没有收藏任何商品，点击商品卡片上的 🤍 收藏吧';
-    else if (searchQuery) msg = `没有找到「${searchQuery}」相关的商品`;
-    g.innerHTML = `<div class="empty-state"><div class="emoji">🔍</div><p>${msg}</p></div>`;
-    return;
-  }
-  
-  g.innerHTML = filteredItems.map(it => `
-    <div class="card" onclick="showDetail('${it.id}')">
+  const cards = list.length ? list.map((it) => `
+    <div class="card" onclick="goDetail('${it.id}')">
       <div class="thumb" style="background:${it.color}">${it.emoji}</div>
       <div class="info">
-        <h3>${it.name}</h3>
-        <span class="tag">${it.game} · ${it.categoryLabel}</span>
-        ${it.platform ? `<div class="meta">🎮 ${it.platform} · 适用地区：${it.region}</div>` : ''}
-        <div class="price">¥${it.price}</div>
-        <div class="stock">库存 ${it.stock} 件 · 销量 ${it.sales}</div>
-        <div class="btn-row">
-          <button onclick="event.stopPropagation(); addToCart('${it.id}')">加入购物车</button>
-          <button class="fav-btn ${favs.includes(it.id) ? 'favorited' : ''}" 
-                  onclick="event.stopPropagation(); toggleFavorite('${it.id}', this)"
-                  aria-label="${favs.includes(it.id) ? '取消收藏' : '收藏'}"></button>
-        </div>
+        <h3>${esc(it.name)}${it.stock <= 0 ? ' <span class="oos">缺货</span>' : ''}</h3>
+        ${it.autoDeliver ? '<span class="tag-auto">✓ 自动发货</span>' : ''}
+        <div class="price"><small>¥</small>${it.price}</div>
+        <div class="meta-line">${esc(it.game)}${it.stock > 0 ? ' · 库存 ' + it.stock + ' 件' : ' · 补货中'}${it.sales ? ' · 已售 ' + it.sales : ''}</div>
       </div>
-    </div>`).join('');
+    </div>`).join('') : `<div class="empty">没有找到相关商品<br>换个关键词试试</div>`;
+
+  $('#app').innerHTML = `
+  <div class="topbar">
+    <div class="logo">${esc(SETTINGS.shopName || '小铺子')}<small>专业数字卡密自动交易平台</small></div>
+    <button class="obtn" onclick="goOrder()">订单查询</button>
+    <button class="menu-btn" onclick="openMenu()">☰</button>
+  </div>
+  <div class="shop-head">
+    <div class="avatar">🛒</div>
+    <div class="shop-info"><h1>${esc(SETTINGS.shopName || '小铺子')}</h1><p>中国 · 已入驻 · 数字卡密自动发货</p></div>
+    <button class="contact-btn" onclick="openContact()">联系TA</button>
+  </div>
+  <div class="marquee">📢 <span>${esc(SETTINGS.announcement || '')}</span></div>
+  <div class="tabs">
+    <button class="${curTab === 'goods' ? 'active' : ''}" onclick="switchTab('goods')">宝贝</button>
+    <button class="${curTab === 'seller' ? 'active' : ''}" onclick="switchTab('seller')">商家</button>
+    <button class="${curTab === 'search' ? 'active' : ''}" onclick="switchTab('search')">搜索</button>
+  </div>
+  ${curTab === 'search' ? `
+    <div class="search-wrap">
+      <input type="text" id="searchInput" placeholder="搜索店内商品" value="${esc(searchQuery)}">
+      <button onclick="doSearch()">搜索</button>
+    </div>
+    <p style="padding:4px 14px 0;font-size:12px;color:#999">搜本店宝贝 / 输入商品名称或关键词，快速找到心仪宝贝</p>` : ''}
+  ${curTab === 'seller' ? `
+    <div class="seller-card"><h3>🏪 店铺信息</h3>
+      <p>店名：${esc(SETTINGS.shopName || '小铺子')}\n所在地：中国\n主营：游戏道具、Steam 激活码，自动发卡\n客服：${SETTINGS.contactQQ ? 'QQ ' + esc(SETTINGS.contactQQ) : ''}${SETTINGS.contactWechat ? '　微信 ' + esc(SETTINGS.contactWechat) : ''}${!SETTINGS.contactQQ && !SETTINGS.contactWechat ? '请点右上角“联系TA”' : ''}</p>
+    </div>
+    <div class="seller-card"><h3>📢 店铺公告</h3><p>${esc(SETTINGS.announcement || '')}</p></div>
+    <div class="seller-card"><h3>📋 经营信息</h3><p>本店为个人小店，仅出售虚拟数字商品（游戏道具、激活码），不涉及实物发货。激活码类商品付款确认后自动发卡，卡密一经发出不支持退款，请下单前确认好商品。</p></div>` : `
+    <div class="cats">${cats.map(([k, label]) => `
+      <button class="${curCat === k ? 'active' : ''}" onclick="setCat('${k}')">${label} <span class="n">${k === '' ? allItems.length : (catCounts[k] || 0)}</span></button>`).join('')}
+    </div>
+    <div class="grid">${cards}</div>`}
+  <footer>小铺子 · 数字卡密自动交易<br>下单即表示同意店内公告与售后说明 · 卡密商品一经发出不支持退款<br><a href="/admin.html" style="color:#ccc">店主管理后台</a></footer>`;
+  const si = $('#searchInput');
+  if (si) si.addEventListener('keydown', (e) => { if (e.key === 'Enter') doSearch(); });
 }
 
-async function refreshCartCount() {
-  const r = await fetch('/api/cart');
-  const d = await r.json();
-  document.getElementById('cartCount').textContent = d.items.reduce((s, x) => s + x.qty, 0);
+function switchTab(t) { curTab = t; if (t !== 'search') searchQuery = ''; renderHome(); window.scrollTo(0, 0); }
+function setCat(c) { curCat = c; curTab = 'goods'; renderHome(); }
+function doSearch() { searchQuery = ($('#searchInput') || {}).value.trim() || ''; renderHome(); }
+
+// ---------- 详情 ----------
+function goDetail(id) { location.hash = '#/goods/' + id; }
+function renderDetail() {
+  const it = allItems.find((x) => x.id === detailId);
+  if (!it) { location.hash = '#/'; return; }
+  const recs = allItems.filter((x) => x.id !== it.id && x.category === it.category).slice(0, 6);
+  const recList = recs.length ? recs : allItems.filter((x) => x.id !== it.id).slice(0, 6);
+  $('#app').innerHTML = `
+  <div class="detail-top"><button onclick="location.hash='#/'">‹</button><h2>${esc(it.name)}</h2></div>
+  <div class="detail-poster" style="background:${it.color}">${it.emoji}</div>
+  <div class="shop-row">
+    <div class="avatar">🛒</div><div class="nm">${esc(SETTINGS.shopName || '小铺子')}</div>
+    <button onclick="location.hash='#/'">进店逛逛</button>
+  </div>
+  <div class="detail-body">
+    <h2>${esc(it.name)} ${it.autoDeliver ? '<span class="tag-auto">✓ 自动发货</span>' : ''}</h2>
+    <div class="price"><small>¥</small>${it.price}</div>
+    <p style="font-size:13px;color:#888">${esc(it.game)}${it.platform ? ' · ' + esc(it.platform) : ''}${it.region ? ' · 适用：' + esc(it.region) : ''} · ${it.stock > 0 ? '库存 ' + it.stock + ' 件' : '缺货补货中'}${it.sales ? ' · 已售 ' + it.sales : ''}</p>
+  </div>
+  <div class="desc-box"><h3>宝贝描述</h3>
+    <p>${esc(it.desc)}</p>
+    <div class="warn">${it.autoDeliver
+      ? '⚠️ 卡密每单一张，下单后请按付款页提示扫码付款，店主确认收款后自动发卡。\n卡密一经发出不支持退款，请下单前确认好商品。\n请妥善保管卡密，勿向他人泄露。'
+      : '⚠️ 虚拟道具商品，付款确认后请联系客服提供游戏 ID，由店主手动发货。\n请下单前确认好商品类型与价格。'}</div>
+  </div>
+  <div class="rec-title">宝贝推荐</div>
+  <div class="grid" style="padding-bottom:90px">${recList.map((r) => `
+    <div class="card" onclick="goDetail('${r.id}')">
+      <div class="thumb" style="background:${r.color}">${r.emoji}</div>
+      <div class="info"><h3>${esc(r.name)}</h3>
+      <div class="price"><small>¥</small>${r.price}</div></div>
+    </div>`).join('')}</div>
+  <div class="buybar">
+    <button class="bb" onclick="location.hash='#/'"><span>🏪</span>店铺</button>
+    <button class="bb" onclick="goOrder()"><span>📋</span>订单</button>
+    <button class="bb" onclick="openContact()"><span>💬</span>客服</button>
+    <button class="buy-now" ${it.stock <= 0 ? 'disabled' : ''} onclick="openBuy('${it.id}')">${it.stock <= 0 ? '缺货补货中' : '立即购买'}</button>
+  </div>`;
+  window.scrollTo(0, 0);
 }
 
-async function addToCart(id) {
-  const r = await fetch('/api/cart', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id, qty: 1 }) });
-  const d = await r.json();
-  if (!r.ok) { alert(d.error || '加入失败'); return; }
-  refreshCartCount();
-  alert('已加入购物车');
+// ---------- 下单弹窗 ----------
+function openBuy(id) {
+  const it = allItems.find((x) => x.id === id);
+  if (!it || it.stock <= 0) return;
+  buyState = { item: it, qty: 1, email: '', payMethod: 'wechat' };
+  renderBuySheet();
 }
-
-function showDetail(id) {
-  const it = allItems.find(x => x.id === id);
-  if (!it) return;
-  const favs = getFavorites();
-  const isFav = favs.includes(it.id);
-  document.getElementById('detailBody').innerHTML = `
+function renderBuySheet() {
+  const b = buyState;
+  const it = b.item;
+  $('#sheet').innerHTML = `
+  <div class="grab"></div>
+  <div class="mini-goods">
     <div class="thumb" style="background:${it.color}">${it.emoji}</div>
-    <h2>${it.name}</h2>
-    <span class="tag">${it.game} · ${it.categoryLabel}</span>
-    ${it.platform ? `<p>🎮 平台：${it.platform} &nbsp;·&nbsp; 适用地区：${it.region}</p>` : ''}
-    <p>${it.desc}</p>
-    <p class="price" style="font-size:22px">¥${it.price}</p>
-    <p>库存 ${it.stock} 件 · 销量 ${it.sales}</p>
-    ${it.category === 'key' ? '<div class="note">激活码商品：下单成功后，在订单成功页查看演示激活码（仅供展示，无法真实兑换）。</div>' : '<div class="note">虚拟道具演示商品，下单不产生真实交易。</div>'}
-    <div class="row">
-      <button class="ghost" onclick="closeModals()">关闭</button>
-      <button class="primary" onclick="addToCart('${it.id}'); closeModals();">加入购物车</button>
-    </div>`;
-  document.getElementById('detailModal').classList.add('open');
+    <div class="t"><b>${esc(it.name)}</b><span class="price" style="font-size:18px"><small>¥</small>${it.price}</span> ${it.autoDeliver ? '<span class="tag-auto">✓ 自动发货</span>' : ''}</div>
+    <button class="btn-ghost" style="border:none;font-size:20px" onclick="closeModal()">✕</button>
+  </div>
+  <div class="desc-scroll">${esc(it.desc)}\n${it.autoDeliver ? '⚠️ 卡密一经发出不支持退款，请确认好再下单。' : '⚠️ 虚拟道具，付款后联系客服发货。'}</div>
+  <h3>数量</h3>
+  <div class="stepper">
+    <button onclick="chQty(-1)" ${b.qty <= 1 ? 'disabled' : ''}>−</button>
+    <span class="qty">${b.qty}</span>
+    <button onclick="chQty(1)" ${b.qty >= it.stock ? 'disabled' : ''}>＋</button>
+    <span style="font-size:12px;color:#999;margin-left:8px">库存 ${it.stock} 件</span>
+  </div>
+  <h3>联系邮箱</h3>
+  <input type="email" id="buyEmail" placeholder="用于接收发货信息及订单通知" value="${esc(b.email)}">
+  <div class="hint">邮箱将用于接收发货信息及订单通知，也可凭邮箱查单。</div>
+  <h3>支付方式</h3>
+  <div class="pay-methods">
+    <button class="${b.payMethod === 'wechat' ? 'sel' : ''}" onclick="setPay('wechat')">💬 微信支付</button>
+    <button class="${b.payMethod === 'alipay' ? 'sel' : ''}" onclick="setPay('alipay')">💙 支付宝支付</button>
+  </div>
+  <div class="foot">
+    <div class="total">合计 <b>¥${(it.price * b.qty).toFixed(2)}</b> <span style="font-size:12px;color:#999">商品金额 ¥${(it.price * b.qty).toFixed(2)}</span></div>
+    <button class="btn-orange" onclick="confirmBuy()">确认支付</button>
+  </div>`;
+  $('#modal').classList.add('open');
+}
+function chQty(d) {
+  const b = buyState;
+  b.qty = Math.min(b.item.stock, Math.max(1, b.qty + d));
+  b.email = ($('#buyEmail') || {}).value || b.email;
+  renderBuySheet();
+}
+function setPay(m) {
+  buyState.payMethod = m;
+  buyState.email = ($('#buyEmail') || {}).value || buyState.email;
+  renderBuySheet();
+}
+async function confirmBuy() {
+  const b = buyState;
+  b.email = ($('#buyEmail') || {}).value.trim();
+  if (!/^\S+@\S+\.\S+$/.test(b.email)) { alert('请填写正确的联系邮箱'); return; }
+  try {
+    const d = await api('/api/orders', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ productId: b.item.id, qty: b.qty, email: b.email, payMethod: b.payMethod }) });
+    currentOrder = d;
+    renderPaySheet(d);
+  } catch (e) { alert(e.message); }
 }
 
-async function openCart() {
-  const r = await fetch('/api/cart');
-  const d = await r.json();
-  const lines = d.items.map(x => `
-    <div class="cart-line">
-      <span>${x.emoji} ${x.name} × ${x.qty}</span>
-      <span>¥${x.subtotal} <a href="javascript:removeItem('${x.id}')" style="color:#e74c3c">移除</a></span>
-    </div>`).join('') || '<p style="color:#888;padding:12px 0">购物车是空的</p>';
-  document.getElementById('cartBody').innerHTML = `
-    <h2>🛒 我的购物车</h2>
-    ${lines}
-    <div class="total">合计：¥${d.total}</div>
-    <input id="buyer" placeholder="收货人昵称（可不填）">
-    <div class="note">演示下单，不接真实支付，不会真的扣钱。</div>
-    <div class="row">
-      <button class="ghost" onclick="closeModals()">继续逛逛</button>
-      <button class="primary" onclick="checkout()" ${d.items.length ? '' : 'disabled'}>下单</button>
-    </div>`;
-  document.getElementById('cartModal').classList.add('open');
+// ---------- 付款页 ----------
+function renderPaySheet(d) {
+  const payName = d.payMethod === 'wechat' ? '微信支付' : '支付宝支付';
+  $('#sheet').innerHTML = `
+  <div class="grab"></div>
+  <h2 style="text-align:center">扫码付款 · ${payName}</h2>
+  <div class="order-no">订单号：<b>${d.orderNo}</b>　实付 <b>¥${Number(d.total).toFixed(2)}</b></div>
+  <div class="pay-qr">${d.qr ? `<img src="${d.qr}" alt="收款码">` : '<div class="noqr">店主尚未上传收款码<br>请联系客服索要收款方式</div>'}</div>
+  <p class="hint" style="text-align:center">请用${payName}扫码支付 ¥${Number(d.total).toFixed(2)}，付完点下方“我已付款”</p>
+  <h3>交易单号（选填，方便店主对账）</h3>
+  <input type="text" id="txidInput" placeholder="微信/支付宝账单详情里的交易单号后几位">
+  <div class="note">付款后请点“我已付款”。${SETTINGS.autoDeliver ? '系统将自动发卡，卡密会直接显示在下方。' : '店主确认收款后会自动发卡，卡密会显示在订单页（一般几分钟内）。'}</div>
+  <div class="foot">
+    <button class="btn-ghost" onclick="closeModal(); goOrderNo('${d.orderNo}')">稍后付款</button>
+    <button class="btn-orange" style="flex:1" onclick="markPaid('${d.orderNo}')">我已付款</button>
+  </div>`;
+  $('#modal').classList.add('open');
+}
+async function markPaid(orderNo) {
+  const txid = ($('#txidInput') || {}).value.trim() || '';
+  try {
+    const o = await api('/api/orders/' + orderNo + '/paid', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ txid }) });
+    closeModal();
+    renderOrderDetail(o);
+  } catch (e) { alert(e.message); }
 }
 
-async function removeItem(id) {
-  await fetch('/api/cart/' + id, { method: 'DELETE' });
-  refreshCartCount();
-  openCart();
+// ---------- 查单 ----------
+function goOrder() { location.hash = '#/order'; }
+function goOrderNo(no) { location.hash = '#/order/' + no; }
+function renderOrderQuery() {
+  $('#app').innerHTML = `
+  <div class="detail-top"><button onclick="location.hash='#/'">‹</button><h2>订单查询</h2></div>
+  <div style="background:#fff;padding:18px 14px;text-align:center">
+    <h2 style="font-size:18px">轻松查询订单，即刻享受自动交易</h2>
+    <p style="font-size:13px;color:#888;margin:6px 0 14px">输入邮箱地址或订单号，快速查看订单状态和详情</p>
+    <input type="text" id="queryInput" placeholder="请输入下单邮箱地址或订单号" style="margin-top:0">
+    <button class="btn-orange" style="width:100%;margin-top:10px" onclick="doQuery()">查询订单</button>
+    <p class="hint" style="margin-top:8px">例如：example@email.com 或 XP1234567890</p>
+  </div>
+  <div id="queryResult"></div>
+  <div class="seller-card"><h3>🛡️ 防骗提醒</h3><p>本店不会主动要求私下转账、索要验证码或引导站外交易。如对订单有疑问，请在24小时内联系客服反馈，逾期请自行与店主协商解决。</p></div>
+  <footer>小铺子 · 数字卡密自动交易</footer>`;
 }
-
-async function checkout() {
-  const buyer = (document.getElementById('buyer') || {}).value || '游客';
-  const r = await fetch('/api/orders', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ buyer }) });
-  const d = await r.json();
-  if (!r.ok) { alert(d.error || '下单失败'); return; }
-  refreshCartCount();
-  loadItems();
-  const keysHtml = (d.keys && d.keys.length) ? `
-    <div style="text-align:left;margin-top:12px">
-      <h3 style="margin-bottom:4px">🔑 您的激活码</h3>
-      ${d.keys.map(k => `
-        <div class="keybox">
-          <div class="kname">${k.name} × ${k.qty}</div>
-          ${k.codes.map(c => `<code>${c}</code>`).join('')}
-          <div class="kwarn">演示激活码，仅供展示，无法真实兑换</div>
-        </div>`).join('')}
+async function doQuery() {
+  const v = ($('#queryInput') || {}).value.trim();
+  if (!v) { alert('请填写邮箱或订单号'); return; }
+  const box = $('#queryResult');
+  box.innerHTML = '<div class="empty">查询中…</div>';
+  try {
+    if (/^XP/i.test(v)) {
+      const o = await api('/api/orders/' + encodeURIComponent(v));
+      renderOrderDetail(o, true);
+      return;
+    }
+    const d = await api('/api/orders?email=' + encodeURIComponent(v));
+    if (!d.orders.length) { box.innerHTML = '<div class="empty">没有找到该邮箱的订单<br>请确认邮箱就是下单时填的那个</div>'; return; }
+    box.innerHTML = d.orders.map((o) => `
+      <div class="order-card" onclick="goOrderNo('${o.orderNo}')">
+        <div class="row1"><span class="nm">${esc(o.name)} × ${o.qty}</span><span class="${statusClass(o.status)}">${statusLabel(o.status)}</span></div>
+        <div class="sub">订单号：${o.orderNo}<br>实付 ¥${Number(o.total).toFixed(2)} · ${new Date(o.createdAt).toLocaleString()}</div>
+      </div>`).join('');
+  } catch (e) { box.innerHTML = `<div class="empty">${esc(e.message)}</div>`; }
+}
+async function loadOrderDetail(orderNo) {
+  try {
+    const o = await api('/api/orders/' + encodeURIComponent(orderNo));
+    renderOrderDetail(o);
+  } catch (e) {
+    $('#app').innerHTML = `<div class="detail-top"><button onclick="location.hash='#/order'">‹</button><h2>订单详情</h2></div><div class="empty">${esc(e.message)}</div>`;
+  }
+}
+function renderOrderDetail(o, fromQuery) {
+  const codesHtml = o.status === 'delivered' && o.codes && o.codes.length ? `
+    <div class="seller-card"><h3>🔑 您的卡密（请妥善保管）</h3>
+      ${o.codes.map((c) => `<div class="keybox"><code>${esc(c.code)}</code>${c.demo ? '<div class="kwarn">演示卡密，仅供展示，无法真实兑换</div>' : '<div class="kwarn">请尽快使用，勿向他人泄露</div>'}<button onclick="copyText('${esc(c.code)}')">复制卡密</button></div>`).join('')}
     </div>` : '';
-  document.getElementById('cartBody').innerHTML = `
-    <div class="ok">
-      <div class="big">✅</div>
-      <h2>下单成功！</h2>
-      <div class="no">订单号：${d.orderNo}</div>
-      <p>实付金额：¥${d.total}</p>
-      <p style="color:#e74c3c;font-weight:bold;margin-top:8px">演示订单，未真实付款</p>
-      ${keysHtml}
-      <div class="row" style="margin-top:16px"><button class="primary" onclick="closeModals()">好的</button></div>
-    </div>`;
+  const tip = o.status === 'pending' ? '<div class="note">订单待付款：请返回商品页重新下单，或联系客服。</div>'
+    : o.status === 'paid' ? '<div class="note">已收到您的“我已付款”，店主确认收款后会自动发卡，卡密会显示在这里，请稍等片刻再刷新查看。</div>'
+    : o.status === 'delivered' && !o.isKey ? '<div class="note">虚拟道具商品已确认，请联系客服提供游戏 ID 安排发货。</div>'
+    : o.status === 'cancelled' ? '<div class="note">订单已取消，如有疑问请联系客服。</div>' : '';
+  $('#app').innerHTML = `
+  <div class="detail-top"><button onclick="location.hash='#/order'">‹</button><h2>订单详情</h2></div>
+  <div class="seller-card">
+    <div class="row1" style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:16px;font-weight:bold">${esc(o.name)} × ${o.qty}</span><span class="${statusClass(o.status)}">${statusLabel(o.status)}</span></div>
+    <p style="margin-top:8px">订单号：${o.orderNo}<br>实付金额：¥${Number(o.total).toFixed(2)} · ${o.payMethod === 'wechat' ? '微信支付' : '支付宝支付'}<br>下单时间：${new Date(o.createdAt).toLocaleString()}${o.deliveredAt ? '<br>发货时间：' + new Date(o.deliveredAt).toLocaleString() : ''}</p>
+  </div>
+  ${tip}
+  ${codesHtml}
+  <div style="padding:0 12px 40px"><button class="btn-orange" style="width:100%" onclick="location.hash='#/'">继续逛逛</button></div>`;
+  window.scrollTo(0, 0);
+}
+function copyText(t) {
+  if (navigator.clipboard) navigator.clipboard.writeText(t).then(() => alert('已复制'));
+  else { const ta = document.createElement('textarea'); ta.value = t; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); alert('已复制'); }
 }
 
-function closeModals() {
-  document.querySelectorAll('.modal').forEach(m => m.classList.remove('open'));
+// ---------- 菜单 / 客服弹窗 ----------
+function openMenu() {
+  $('#sheet').innerHTML = `
+  <div class="grab"></div><h2>菜单</h2>
+  <button class="menu-item" onclick="closeModal(); goOrder()">📋 订单查询</button>
+  <button class="menu-item" onclick="closeModal(); openContact()">💬 联系客服</button>
+  <button class="menu-item" onclick="closeModal(); switchTab('seller'); location.hash='#/'">🏪 商家信息</button>
+  <button class="menu-item" onclick="closeModal(); showAnnounce()">📢 店铺公告</button>`;
+  $('#modal').classList.add('open');
 }
+function openContact() {
+  const qq = SETTINGS.contactQQ, wx = SETTINGS.contactWechat;
+  $('#sheet').innerHTML = `
+  <div class="grab"></div><h2>联系客服</h2>
+  <p class="hint">在线客服：请通过以下方式联系店主（工作时间一般几分钟内回复）</p>
+  ${qq ? `<div class="order-card" style="margin:10px 0">QQ：<b>${esc(qq)}</b> <button class="btn-ghost" style="float:right;padding:5px 12px" onclick="copyText('${esc(qq)}')">复制</button></div>` : ''}
+  ${wx ? `<div class="order-card" style="margin:10px 0">微信：<b>${esc(wx)}</b> <button class="btn-ghost" style="float:right;padding:5px 12px" onclick="copyText('${esc(wx)}')">复制</button></div>` : ''}
+  ${!qq && !wx ? '<div class="note">店主尚未填写客服联系方式，请通过订单页留言或稍后再来。</div>' : ''}
+  <div class="foot"><button class="btn-orange" style="flex:1" onclick="closeModal()">知道了</button></div>`;
+  $('#modal').classList.add('open');
+}
+function showAnnounce() {
+  $('#sheet').innerHTML = `
+  <div class="grab"></div><h2>📢 店铺公告</h2>
+  <p style="font-size:14px;line-height:1.8;white-space:pre-line">${esc(SETTINGS.announcement || '')}</p>
+  <div class="foot"><button class="btn-orange" style="flex:1" onclick="closeModal()">我知道了</button></div>`;
+  $('#modal').classList.add('open');
+}
+function closeModal() { $('#modal').classList.remove('open'); }
+$('#modal').addEventListener('click', (e) => { if (e.target.id === 'modal') closeModal(); });
 
-document.querySelectorAll('#filters button[data-cat]').forEach(b => {
-  b.onclick = () => {
-    document.querySelectorAll('#filters button[data-cat]').forEach(x => x.classList.remove('active'));
-    b.classList.add('active');
-    cat = b.dataset.cat;
-    loadItems();
-  };
-});
-document.getElementById('sort').onchange = (e) => { sort = e.target.value; loadItems(); };
+// ---------- 路由 / 初始化 ----------
+function route() {
+  const h = location.hash || '#/';
+  const m = h.match(/^#\/goods\/(.+)$/);
+  const om = h.match(/^#\/order\/(.+)$/);
+  if (m) { detailId = decodeURIComponent(m[1]); renderDetail(); }
+  else if (om) { loadOrderDetail(decodeURIComponent(om[1])); }
+  else if (h === '#/order') { renderOrderQuery(); }
+  else { renderHome(); }
+}
+window.addEventListener('hashchange', route);
 
-// 搜索输入防抖
-let searchDebounce;
-document.getElementById('searchInput').addEventListener('input', (e) => {
-  clearTimeout(searchDebounce);
-  searchDebounce = setTimeout(() => {
-    searchQuery = e.target.value.trim();
-    loadItems();
-  }, 150);
-});
-
-// 初始化
 async function init() {
-  const r = await fetch('/api/items');
-  const d = await r.json();
-  allItems = d.items;
-  loadRanking();
-  loadItems();
-  refreshCartCount();
+  try {
+    SETTINGS = await api('/api/public-settings');
+    const d = await api('/api/items');
+    allItems = d.items;
+    catCounts = d.counts || {};
+  } catch (e) {
+    $('#app').innerHTML = '<div class="empty">小铺子暂时打不开，请稍后再试<br>' + esc(e.message) + '</div>';
+    return;
+  }
+  route();
+  if (!localStorage.getItem('xp-announce-seen')) {
+    setTimeout(() => { showAnnounce(); localStorage.setItem('xp-announce-seen', '1'); }, 600);
+  }
 }
 init();
 </script>
