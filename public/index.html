@@ -663,7 +663,7 @@ let buyState = null; // {item, qty, email, payMethod}
 let currentOrder = null;
 
 const $ = (s) => document.querySelector(s);
-function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&', '<': '<', '>': '>', '"': '"', "'": ''' }[c])); }
+function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
 function statusLabel(s) {
   return { pending: '待付款', paid: '待确认收款', delivered: '已发货', cancelled: '已取消' }[s] || s;
 }
