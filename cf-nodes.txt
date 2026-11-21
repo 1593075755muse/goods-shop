@@ -1,1 +1,0 @@
-vless://1e5e2893-6770-4928-b534-7bf689d64847@node.guliduo.cc.cd:443?encryption=none&security=tls&type=ws&host=node.guliduo.cc.cd&path=%2Fvless#InstaBox-Named
