@@ -82,6 +82,38 @@ a:hover{text-decoration:underline}
 .stat b{font-size:34px}
 .headline{font-size:26px}
 }
+
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s ease}
+.reveal.visible{opacity:1;transform:none}
+.reveal .stat:nth-child(2){transition-delay:.12s}
+.reveal .stat:nth-child(3){transition-delay:.24s}
+.promo.reveal:nth-child(2){transition-delay:.08s}
+.promo.reveal:nth-child(3){transition-delay:.16s}
+.promo.reveal:nth-child(4){transition-delay:.24s}
+.promo.reveal:nth-child(5){transition-delay:.32s}
+.promo.reveal:nth-child(6){transition-delay:.4s}
+@media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
+
+@keyframes rise{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:none}}
+@keyframes fadeDown{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:none}}
+@keyframes logoGlow{0%,100%{opacity:.85}50%{opacity:1;text-shadow:0 0 26px rgba(255,255,255,.65)}}
+.nav{animation:fadeDown .6s ease both}
+.hero h1{animation:rise .8s ease both}
+.hero .tagline{animation:rise .8s .15s ease both}
+.hero .links{animation:rise .8s .3s ease both}
+.apple-mark{animation:logoGlow 2.4s ease-in-out infinite}
+.touch-demo{margin-top:34px;display:flex;justify-content:center}
+.td-phone{width:230px;text-align:center;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.td-screen{position:relative;height:400px;border-radius:36px;border:1px solid #c9c9c9;background:linear-gradient(160deg,#2ec5d3,#1a7fbf 55%,#0d4d8f);overflow:hidden;transition:transform .25s ease,box-shadow .25s ease}
+.td-screen .td-clock{color:#fff;font-size:34px;font-weight:200;margin-top:26px}
+.td-screen .td-grid{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:26px;padding:0 18px}
+.td-screen .td-grid i{width:42px;height:42px;border-radius:10px;display:block}
+.td-peek{position:absolute;left:14px;right:14px;top:110px;background:#fff;border-radius:12px;padding:12px;box-shadow:0 12px 32px rgba(0,0,0,.35);opacity:0;transform:scale(.92) translateY(8px);transition:opacity .25s ease,transform .25s ease;pointer-events:none}
+.td-peek-img{height:120px;border-radius:8px;background:linear-gradient(140deg,#ff9a56,#ff2d55 45%,#5856d6)}
+.td-peek p{font-size:13px;color:#333;margin-top:8px}
+.td-phone.pressing .td-screen{transform:scale(.97);box-shadow:0 0 0 6px rgba(0,136,204,.18)}
+.td-phone.pressing .td-peek{opacity:1;transform:scale(1) translateY(0)}
+.td-hint{font-size:13px;color:#666;margin-top:14px}
 </style>
 </head>
 <body>
@@ -92,28 +124,29 @@ a:hover{text-decoration:underline}
 <h1>iPhone 6s</h1>
 <p class="tagline">唯一的不同，是处处都不同。</p>
 <p class="links"><a href="#">观看影片</a><a href="#">观看主题演讲</a><a href="#">观看广告</a></p>
-<div class="phones">
+<div class="phones reveal">
 <div class="phone phone-rose"><span class="apple-mark"></span></div>
 <div class="phone phone-silver"><div class="screen"><div class="clock">9:41</div><div class="apps"><i style="background:#5ac8fa"></i><i style="background:#ffcc00"></i><i style="background:#ff2d55"></i><i style="background:#4cd964"></i><i style="background:#5856d6"></i><i style="background:#ff9500"></i><i style="background:#007aff"></i><i style="background:#8e8e93"></i></div></div><div class="home"></div></div>
 </div>
 </div></header>
-<div class="wrap"><p class="intro">从你开始使用 iPhone 6s 的那一刻起，你就会感觉到它是如此不同。指尖一按，3D Touch 就能让你实现更多精彩。Live Photos 能以生动的方式，让你的回忆鲜活呈现。而所有这些，仅仅是个开始。你对 iPhone 6s 的了解越深入，你越会发觉它的创新层层面面，无处不在。</p></div>
+<div class="wrap"><p class="intro reveal">从你开始使用 iPhone 6s 的那一刻起，你就会感觉到它是如此不同。指尖一按，3D Touch 就能让你实现更多精彩。Live Photos 能以生动的方式，让你的回忆鲜活呈现。而所有这些，仅仅是个开始。你对 iPhone 6s 的了解越深入，你越会发觉它的创新层层面面，无处不在。</p></div>
 
-<section class="section">
+<section class="section reveal">
   <div class="wrap">
     <p class="eyebrow">3D Touch</p>
     <h2 class="headline">新一代 Multi-Touch</h2>
     <p class="copy">第一代 iPhone 为全世界带来了 Multi-Touch 技术，从此改变了我们体验科技的方式。而现在，3D Touch 技术的推出，让你可以做到许多过去无法实现的事情。它可以感应你按压显示屏的力度，并以此做出响应。</p>
+<div class="touch-demo reveal"><div class="td-phone" id="tdPhone"><div class="td-screen"><div class="td-clock">9:41</div><div class="td-grid"><i style="background:#5ac8fa"></i><i style="background:#ffcc00"></i><i style="background:#ff2d55"></i><i style="background:#4cd964"></i><i style="background:#5856d6"></i><i style="background:#ff9500"></i><i style="background:#007aff"></i><i style="background:#8e8e93"></i></div><div class="td-peek"><div class="td-peek-img"></div><p>Live Photos · 刚刚</p></div></div><p class="td-hint">按住手机试试 3D Touch，重按弹出预览</p></div></div>
     <p class="more"><a href="#">进一步了解 3D Touch</a> <a href="#">重放</a></p>
   </div>
 </section>
 <hr class="divider">
-<section class="section">
+<section class="section reveal">
   <div class="wrap">
     <p class="eyebrow">相机</p>
     <h2 class="headline">1200 万像素照片、4K 视频、Live Photos，还有生动如初的记忆。</h2>
     <p class="copy">人见人爱的相机，现在更进一步。iPhone 6s 拥有 1200 万像素 iSight 摄像头，可拍摄清晰锐利、细节生动的照片，以及精彩绝伦的 4K 视频，其分辨率可达 1080p HD 视频的四倍。</p>
-    <div class="stats">
+    <div class="stats reveal">
       <div class="stat"><b>1200 万像素</b><span>照片</span></div>
       <div class="stat"><b>4K</b><span>视频</span></div>
       <div class="stat"><b>Live Photos</b><span>生动如初的记忆</span></div>
@@ -122,12 +155,12 @@ a:hover{text-decoration:underline}
   </div>
 </section>
 
-<section class="section">
+<section class="section reveal">
   <div class="wrap">
     <p class="eyebrow">技术</p>
     <h2 class="headline">A9 芯片，先进的智能手机芯片。</h2>
     <p class="copy">特别打造的 64 位 A9 芯片，为 iPhone 6s 带来过去只有台式电脑才具备的性能。你将在各种你喜爱的图形密集型游戏和 app 中，体验到比以往提速 70% 的中央处理器性能，以及提速 90% 的图形处理器性能。</p>
-    <div class="stats">
+    <div class="stats reveal">
       <div class="stat"><b>台式电脑级</b><span>64 位架构</span></div>
       <div class="stat"><b>70%</b><span>中央处理器提速</span></div>
       <div class="stat"><b>90%</b><span>图形处理器提速</span></div>
@@ -138,12 +171,12 @@ a:hover{text-decoration:underline}
 
 <hr class="divider">
 
-<section class="section">
+<section class="section reveal">
   <div class="wrap">
     <p class="eyebrow">设计</p>
     <h2 class="headline">突破性的设计，又有新突破。</h2>
     <p class="copy">创新并非总是显而易见，但只要稍加留意，你就会发现 iPhone 6s 有了本质上的提升。它的机身采用全新的 7000 系列铝金属打造，这种等级的合金同样应用于航天工业。此外，它的表层玻璃在智能手机中具有超高的强度。它的机身侧面采用玫瑰金色全铝金属打造，让 iPhone 6s 呈现出与众不同的外观。现在，iPhone 6s 还增添了玫瑰金色这一新选择，与深空灰色、银色、金色一起，共同构成四种迷人的外观。</p>
-    <div class="colors">
+    <div class="colors reveal">
       <div>
         <span class="dot dot-gray"></span>
         <p>深空灰色</p>
@@ -167,7 +200,7 @@ a:hover{text-decoration:underline}
 
 <hr class="divider">
 
-<section class="section">
+<section class="section reveal">
   <div class="wrap" style="display: flex; justify-content: space-between;">
     <div class="column">
       <h2 class="headline">iPhone 6s</h2>
@@ -180,7 +213,7 @@ a:hover{text-decoration:underline}
   </div>
 </section>
 
-<section class="section">
+<section class="section reveal">
   <div class="wrap">
     <p class="eyebrow">Touch ID</p>
     <h2 class="headline">先进的安全保护，就在你指尖。</h2>
@@ -189,7 +222,7 @@ a:hover{text-decoration:underline}
   </div>
 </section>
 <hr class="divider">
-<section class="section">
+<section class="section reveal">
   <div class="wrap">
     <p class="eyebrow">无线网络</p>
     <h2 class="headline">4G LTE 和无线网络，双双提速。</h2>
@@ -198,7 +231,7 @@ a:hover{text-decoration:underline}
   </div>
 </section>
 <hr class="divider">
-<section class="section">
+<section class="section reveal">
   <div class="wrap">
     <p class="eyebrow">iOS 9</p>
     <h2 class="headline">用与众不同的手机，体验与众不同。</h2>
@@ -207,7 +240,7 @@ a:hover{text-decoration:underline}
   </div>
 </section>
 <hr class="divider">
-<section class="section">
+<section class="section reveal">
   <div class="wrap">
     <p class="eyebrow">配件</p>
     <h2 class="headline">给出色的 iPhone，来个出彩的搭配。</h2>
@@ -217,14 +250,14 @@ a:hover{text-decoration:underline}
 </section>
 
 <div class="promos"><div class="wrap">
-<div class="promo"><h3>iPhone 6s</h3><p>iPhone 机型比较</p><a href="#">进一步了解 ›</a></div>
-<div class="promo"><h3>升级换购新 iPhone</h3><p>用你现有的 iPhone 来换购新 iPhone，即可享受折抵优惠。</p><a href="#">进一步了解 ›</a></div>
-<div class="promo"><h3>免费送货</h3><p>享受免费送货上门服务。</p><a href="#">进一步了解 ›</a></div>
-<div class="promo"><h3>前往零售店</h3><p>到 Apple Store 零售店亲身体验各种 Apple 产品，我们还将为你解答所有问题。</p><a href="#">前往零售店 ›</a></div>
-<div class="promo"><h3>分期付款</h3><p>符合条件的信用卡用户可选择灵活的分期付款方式。</p><a href="#">进一步了解 ›</a></div>
-<div class="promo"><h3>获得购买帮助</h3><p>有问题吗？致电 Specialist 专家或进行在线交流。致电 400-666-8800 开始交流</p><a href="#">开始交流 ›</a></div>
+<div class="promo reveal"><h3>iPhone 6s</h3><p>iPhone 机型比较</p><a href="#">进一步了解 ›</a></div>
+<div class="promo reveal"><h3>升级换购新 iPhone</h3><p>用你现有的 iPhone 来换购新 iPhone，即可享受折抵优惠。</p><a href="#">进一步了解 ›</a></div>
+<div class="promo reveal"><h3>免费送货</h3><p>享受免费送货上门服务。</p><a href="#">进一步了解 ›</a></div>
+<div class="promo reveal"><h3>前往零售店</h3><p>到 Apple Store 零售店亲身体验各种 Apple 产品，我们还将为你解答所有问题。</p><a href="#">前往零售店 ›</a></div>
+<div class="promo reveal"><h3>分期付款</h3><p>符合条件的信用卡用户可选择灵活的分期付款方式。</p><a href="#">进一步了解 ›</a></div>
+<div class="promo reveal"><h3>获得购买帮助</h3><p>有问题吗？致电 Specialist 专家或进行在线交流。致电 400-666-8800 开始交流</p><a href="#">开始交流 ›</a></div>
 </div></div>
-<footer class="footer"><div class="wrap">
+<footer class="footer reveal"><div class="wrap">
 <p class="footnote">*需要使用数据计划。4G LTE Advanced 和 4G LTE 功能适用于特定国家或地区的特定运营商。速度依据理论上的数据吞吐量，并基于现场状况和不同运营商而可能有所差异。有关 4G LTE 支持的详情，请联系你的运营商并查看 www.apple.com/iphone/LTE/。某些功能仅适用于部分国家或地区。点击此处查看完整列表。</p>
 <p class="breadcrumb"><a href="#">Apple</a> &gt; <a href="#">iPhone</a> &gt; iPhone 6s</p>
 <div class="cols">
@@ -244,5 +277,25 @@ a:hover{text-decoration:underline}
 </div>
 </div></footer>
 
+
+<script>
+(function(){
+var els=document.querySelectorAll('.reveal');
+if(!('IntersectionObserver' in window)){els.forEach(function(e){e.classList.add('visible')});return;}
+var io=new IntersectionObserver(function(es){es.forEach(function(en){if(en.isIntersecting){en.target.classList.add('visible');io.unobserve(en.target);}})},{threshold:0.15});
+els.forEach(function(e){io.observe(e);});
+})();
+
+var td=document.getElementById('tdPhone');
+if(td){
+var on=function(e){e.preventDefault();td.classList.add('pressing');};
+var off=function(){td.classList.remove('pressing');};
+td.addEventListener('mousedown',on);
+td.addEventListener('mouseup',off);
+td.addEventListener('mouseleave',off);
+td.addEventListener('touchstart',on,{passive:false});
+td.addEventListener('touchend',off);
+}
+</script>
 </body>
 </html>
