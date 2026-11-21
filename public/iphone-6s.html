@@ -25,6 +25,11 @@ a:hover{text-decoration:underline}
 .hero .links{margin-top:20px;font-size:15px}
 .hero .links a{margin:0 12px}
 .phones{display:flex;justify-content:center;gap:36px;margin-top:44px}
+.hero-imgs{display:flex;justify-content:center;align-items:flex-end;margin-top:36px;animation:rise .8s .45s ease both}
+.hero-imgs img{height:420px;width:auto;margin:0 -14px}
+.fig{text-align:center;margin-top:36px}
+.fig img{max-width:100%;height:auto}
+.fig.tall img{max-height:520px;width:auto}
 .phone{width:300px;height:610px;border-radius:44px;position:relative;border:1px solid #c9c9c9;flex-shrink:0}
 .phone-rose{background:linear-gradient(160deg,#eec0a8,#b76e79);display:flex;align-items:center;justify-content:center}
 .apple-mark{color:#fff;font-size:72px;opacity:.95}
@@ -124,9 +129,11 @@ a:hover{text-decoration:underline}
 <h1>iPhone 6s</h1>
 <p class="tagline">唯一的不同，是处处都不同。</p>
 <p class="links"><a href="#">观看影片</a><a href="#">观看主题演讲</a><a href="#">观看广告</a></p>
-<div class="phones reveal">
-<div class="phone phone-rose"><span class="apple-mark"></span></div>
-<div class="phone phone-silver"><div class="screen"><div class="clock">9:41</div><div class="apps"><i style="background:#5ac8fa"></i><i style="background:#ffcc00"></i><i style="background:#ff2d55"></i><i style="background:#4cd964"></i><i style="background:#5856d6"></i><i style="background:#ff9500"></i><i style="background:#007aff"></i><i style="background:#8e8e93"></i></div></div><div class="home"></div></div>
+<div class="hero-imgs reveal">
+<img src="images/hero_spacegray_large.png" alt="iPhone 6s 深空灰色">
+<img src="images/hero_silver_large.png" alt="iPhone 6s 银色">
+<img src="images/hero_gold_large.png" alt="iPhone 6s 金色">
+<img src="images/hero_rosegold_large.png" alt="iPhone 6s 玫瑰金色">
 </div>
 </div></header>
 <div class="wrap"><p class="intro reveal">从你开始使用 iPhone 6s 的那一刻起，你就会感觉到它是如此不同。指尖一按，3D Touch 就能让你实现更多精彩。Live Photos 能以生动的方式，让你的回忆鲜活呈现。而所有这些，仅仅是个开始。你对 iPhone 6s 的了解越深入，你越会发觉它的创新层层面面，无处不在。</p></div>
@@ -136,6 +143,7 @@ a:hover{text-decoration:underline}
     <p class="eyebrow">3D Touch</p>
     <h2 class="headline">新一代 Multi-Touch</h2>
     <p class="copy">第一代 iPhone 为全世界带来了 Multi-Touch 技术，从此改变了我们体验科技的方式。而现在，3D Touch 技术的推出，让你可以做到许多过去无法实现的事情。它可以感应你按压显示屏的力度，并以此做出响应。</p>
+    <div class="fig reveal"><img src="images/3dtouch_startframe_large.jpg" alt="3D Touch"></div>
 <div class="touch-demo reveal"><div class="td-phone" id="tdPhone"><div class="td-screen"><div class="td-clock">9:41</div><div class="td-grid"><i style="background:#5ac8fa"></i><i style="background:#ffcc00"></i><i style="background:#ff2d55"></i><i style="background:#4cd964"></i><i style="background:#5856d6"></i><i style="background:#ff9500"></i><i style="background:#007aff"></i><i style="background:#8e8e93"></i></div><div class="td-peek"><div class="td-peek-img"></div><p>Live Photos · 刚刚</p></div></div><p class="td-hint">按住手机试试 3D Touch，重按弹出预览</p></div></div>
     <p class="more"><a href="#">进一步了解 3D Touch</a> <a href="#">重放</a></p>
   </div>
@@ -151,6 +159,8 @@ a:hover{text-decoration:underline}
       <div class="stat"><b>4K</b><span>视频</span></div>
       <div class="stat"><b>Live Photos</b><span>生动如初的记忆</span></div>
     </div>
+    <div class="fig reveal"><img src="images/cameras_front_large.png" alt="iPhone 6s 相机"></div>
+    <div class="fig reveal"><img src="images/cameras_opt_back_large.jpg" alt="Live Photos"></div>
     <p class="more"><a href="#">进一步了解 iPhone 6s 的相机</a></p>
   </div>
 </section>
@@ -165,6 +175,7 @@ a:hover{text-decoration:underline}
       <div class="stat"><b>70%</b><span>中央处理器提速</span></div>
       <div class="stat"><b>90%</b><span>图形处理器提速</span></div>
     </div>
+    <div class="fig reveal"><img src="images/technology_front_large.png" alt="A9 芯片"></div>
     <p class="more"><a href="#">进一步了解 iPhone 6s 的技术 ›</a></p>
   </div>
 </section>
@@ -194,6 +205,7 @@ a:hover{text-decoration:underline}
         <p>玫瑰金</p>
       </div>
     </div>
+    <div class="fig reveal"><img src="images/design_front_large.png" alt="iPhone 6s 设计"></div>
     <p class="more"><a href="#">进一步了解 iPhone 6s 的设计 ›</a></p>
   </div>
 </section>
@@ -218,6 +230,7 @@ a:hover{text-decoration:underline}
     <p class="eyebrow">Touch ID</p>
     <h2 class="headline">先进的安全保护，就在你指尖。</h2>
     <p class="copy">Touch ID 采用先进的指纹识别传感器，比以往更快、更好用，让你轻松安全地解锁你的手机。</p>
+    <div class="fig tall reveal"><img src="images/touch_id_large.jpg" alt="Touch ID"></div>
     <p class="more"><a href="#">进一步了解 iPhone 6s 的技术 ›</a></p>
   </div>
 </section>
@@ -227,6 +240,7 @@ a:hover{text-decoration:underline}
     <p class="eyebrow">无线网络</p>
     <h2 class="headline">4G LTE 和无线网络，双双提速。</h2>
     <p class="copy">iPhone 6s 采用 4G LTE Advanced 技术，速度可达上一代技术的两倍*。它可支持 22 个 LTE 频段，让你可以在世界各处连接上更多的高速 4G LTE 网络。此外，当你连接上无线网络时，也同样能使用 iPhone 6s 以过去两倍的速度处理各种事情，比如浏览网页、下载 app 和游戏，速度同样非常迅速。</p>
+    <div class="fig tall reveal"><img src="images/wireless_large.jpg" alt="无线网络"></div>
     <p class="more"><a href="#">进一步了解 iPhone 6s 的技术 ›</a></p>
   </div>
 </section>
@@ -236,6 +250,7 @@ a:hover{text-decoration:underline}
     <p class="eyebrow">iOS 9</p>
     <h2 class="headline">用与众不同的手机，体验与众不同。</h2>
     <p class="copy">iOS 9 是先进、智能、安全的移动操作系统。众多强大的全新内置 app、Siri 中的先进功能，以及遍布系统各处的提升，让 iOS 9 比以往都更智能，也更加重要。与 Apple 硬件的深度整合，使一切用起来都如天生一对。当你进行多任务处理时，也能体验到出色的性能与电池续航能力。iOS 9 已经针对 iPhone 6s 的 3D Touch 进行了优化，因此你轻按、重按，均可获得响应。</p>
+    <div class="fig reveal"><img src="images/ios_front_large.png" alt="iOS 9"></div>
     <p class="more"><a href="#">进一步了解 iOS 9 ›</a></p>
   </div>
 </section>
@@ -245,6 +260,7 @@ a:hover{text-decoration:underline}
     <p class="eyebrow">配件</p>
     <h2 class="headline">给出色的 iPhone，来个出彩的搭配。</h2>
     <p class="copy">我们的配件与 iPhone 协同设计，因此它们能够与 iPhone 出色搭配，绝妙贴合。天然皮革和亮丽的硅胶保护壳不但具备出色的保护性能，更显时尚个性。四款全新的同色系金属外观的 Lightning 底座，可为 iPhone 6s 带来出色的充电体验。</p>
+    <div class="fig reveal"><img src="images/accessories_large.jpg" alt="iPhone 6s 配件"></div>
     <p class="more"><a href="#">进一步了解 iPhone 6s 配件 ›</a></p>
   </div>
 </section>
