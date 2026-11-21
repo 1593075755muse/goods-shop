@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>小铺子 · 店主管理后台</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background: #f5f5f5; color: #222; }
+  header { background: linear-gradient(90deg, #ff7a18, #ff9a3d); color: #fff; padding: 14px; position: sticky; top: 0; z-index: 10; }
+  header h1 { font-size: 18px; }
+  header p { font-size: 12px; opacity: .9; margin-top: 2px; }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 12px; }
+  .tabs { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+  .tabs button { padding: 9px 16px; border-radius: 18px; border: 1px solid #ddd; background: #fff; font-size: 14px; }
+  .tabs button.active { background: #ff7a18; color: #fff; border-color: #ff7a18; }
+  .card { background: #fff; border-radius: 12px; padding: 14px; margin-bottom: 12px; }
+  .card h2 { font-size: 16px; margin-bottom: 8px; }
+  .card h3 { font-size: 15px; margin: 12px 0 6px; }
+  input, textarea, select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; margin-top: 6px; }
+  textarea { min-height: 80px; }
+  label { font-size: 13px; color: #666; display: block; margin-top: 10px; }
+  button { cursor: pointer; font-family: inherit; }
+  .btn { border: none; border-radius: 18px; padding: 9px 18px; font-size: 14px; color: #fff; background: linear-gradient(90deg, #ff7a18, #ff9a3d); }
+  .btn:disabled { background: #ccc; }
+  .btn-ghost { border: 1px solid #ddd; border-radius: 18px; padding: 8px 14px; font-size: 13px; background: #fff; }
+  .btn-red { border: 1px solid #e60012; color: #e60012; border-radius: 18px; padding: 8px 14px; font-size: 13px; background: #fff; }
+  .btn-green { border: none; border-radius: 18px; padding: 8px 14px; font-size: 13px; color: #fff; background: #16a34a; }
+  .pill { display: inline-block; font-size: 12px; border-radius: 10px; padding: 2px 8px; }
+  .st-pending { background: #fef3c7; color: #92400e; }
+  .st-paid { background: #dbeafe; color: #1e40af; }
+  .st-delivered { background: #dcfce7; color: #166534; }
+  .st-cancelled { background: #fee2e2; color: #991b1b; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  td, th { border-bottom: 1px solid #eee; padding: 8px 4px; text-align: left; vertical-align: top; }
+  th { color: #888; font-weight: normal; }
+  .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .hint { font-size: 12px; color: #999; line-height: 1.6; margin-top: 6px; }
+  .warn { background: #fff8e1; color: #8d6e00; padding: 10px; border-radius: 8px; font-size: 13px; line-height: 1.6; margin-bottom: 12px; }
+  .qr-prev { width: 140px; height: 140px; object-fit: contain; border: 1px solid #eee; border-radius: 8px; margin-top: 6px; }
+  .code-line { font-family: monospace; font-size: 13px; }
+  .login-box { max-width: 360px; margin: 80px auto; background: #fff; padding: 24px; border-radius: 14px; }
+  .login-box h2 { margin-bottom: 12px; }
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+<header><h1>🛒 小铺子 · 店主管理后台</h1><p>订单确认 · 卡密库存 · 收款码 · 公告客服 · 备份</p></header>
+
+<div id="loginView" class="wrap">
+  <div class="login-box">
+    <h2>店主登录</h2>
+    <p class="hint">首次默认密码：<b>xiaopu123</b>，登录后请立刻在“收款设置”里改掉。</p>
+    <input type="password" id="loginPass" placeholder="管理密码" onkeydown="if(event.key==='Enter')doLogin()">
+    <div style="margin-top:12px"><button class="btn" style="width:100%" onclick="doLogin()">登录</button></div>
+    <p class="hint"><a href="/">← 回店铺首页</a></p>
+  </div>
+</div>
+
+<div id="mainView" class="wrap hidden">
+  <div class="warn">⚠️ 提醒：卡密、订单存在服务器 data/ 文件里，<b>重新部署会清空</b>，请定期在“备份”里导出备份文件。真卡密不要发到任何公开地方。</div>
+  <div class="tabs">
+    <button data-tab="orders" class="active" onclick="switchTab('orders')">📋 订单</button>
+    <button data-tab="cards" onclick="switchTab('cards')">🔑 卡密库存</button>
+    <button data-tab="settings" onclick="switchTab('settings')">💰 收款设置</button>
+    <button data-tab="backup" onclick="switchTab('backup')">💾 备份</button>
+    <button onclick="logout()" style="margin-left:auto">退出</button>
+  </div>
+  <div id="tabBody"></div>
+</div>
+
+<script>
+let TOKEN = localStorage.getItem('xp-admin-token') || '';
+let curTab = 'orders';
+let ordersCache = [];
+let cardsSummary = {};
+let settingsCache = {};
+
+function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+async function api(path, opts) {
+  opts = opts || {};
+  opts.headers = Object.assign({ 'Content-Type': 'application/json', 'x-admin-token': TOKEN }, opts.headers || {});
+  const r = await fetch(path, opts);
+  const d = await r.json().catch(() => ({}));
+  if (r.status === 401) { logout(); throw new Error('登录已过期，请重新登录'); }
+  if (!r.ok) throw new Error(d.error || '请求失败');
+  return d;
+}
+function statusLabel(s) { return { pending: '待付款', paid: '待确认收款', delivered: '已发货', cancelled: '已取消' }[s] || s; }
+
+async function doLogin() {
+  const pw = document.getElementById('loginPass').value;
+  try {
+    const d = await fetch('/api/admin/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ password: pw }) }).then((r) => r.json().then((j) => ({ ok: r.ok, j })));
+    if (!d.ok) { alert(d.j.error || '登录失败'); return; }
+    TOKEN = d.j.token;
+    localStorage.setItem('xp-admin-token', TOKEN);
+    showMain();
+  } catch (e) { alert(e.message); }
+}
+function logout() { TOKEN = ''; localStorage.removeItem('xp-admin-token'); document.getElementById('loginView').classList.remove('hidden'); document.getElementById('mainView').classList.add('hidden'); }
+function showMain() {
+  document.getElementById('loginView').classList.add('hidden');
+  document.getElementById('mainView').classList.remove('hidden');
+  switchTab('orders');
+}
+function switchTab(t) {
+  curTab = t;
+  document.querySelectorAll('.tabs button[data-tab]').forEach((b) => b.classList.toggle('active', b.dataset.tab === t));
+  if (t === 'orders') renderOrders();
+  if (t === 'cards') renderCards();
+  if (t === 'settings') renderSettings();
+  if (t === 'backup') renderBackup();
+}
+
+// ---------- 订单 ----------
+async function renderOrders() {
+  const body = document.getElementById('tabBody');
+  body.innerHTML = '<div class="card">加载中…</div>';
+  try {
+    const d = await api('/api/admin/orders');
+    ordersCache = d.orders;
+    const counts = { paid: d.orders.filter((o) => o.status === 'paid').length, pending: d.orders.filter((o) => o.status === 'pending').length };
+    body.innerHTML = `
+    <div class="card"><h2>订单（${d.orders.length}）</h2>
+      <p class="hint">待确认收款：<b style="color:#e60012">${counts.paid}</b> 单 · 待付款：${counts.pending} 单。买家付款后点“我已付款”才会到这里，确认收款前请先核对${''}微信/支付宝账单是否到账。</p>
+      <div class="row" style="margin:10px 0">
+        <select id="orderFilter" onchange="renderOrders()" style="width:180px;margin-top:0">
+          <option value="">全部状态</option>
+          <option value="paid">待确认收款</option>
+          <option value="pending">待付款</option>
+          <option value="delivered">已发货</option>
+          <option value="cancelled">已取消</option>
+        </select>
+        <button class="btn-ghost" onclick="renderOrders()">刷新</button>
+      </div>
+      <div id="orderList"></div>
+    </div>`;
+    drawOrderList('');
+    document.getElementById('orderFilter').onchange = (e) => drawOrderList(e.target.value);
+  } catch (e) { body.innerHTML = `<div class="card">${esc(e.message)}</div>`; }
+}
+function drawOrderList(filter) {
+  const list = filter ? ordersCache.filter((o) => o.status === filter) : ordersCache;
+  const el = document.getElementById('orderList');
+  if (!list.length) { el.innerHTML = '<p class="hint">没有订单</p>'; return; }
+  el.innerHTML = `<table><tr><th>订单</th><th>金额</th><th>状态</th><th>操作</th></tr>${list.map((o) => `
+    <tr>
+      <td><b>${esc(o.name)} × ${o.qty}</b><br><span style="color:#888">${o.orderNo}</span><br><span style="color:#888">${esc(o.email)}</span><br><span style="color:#888">${o.payMethod === 'wechat' ? '微信' : '支付宝'}${o.txid ? ' · 单号 ' + esc(o.txid) : ''}</span><br><span style="color:#888">${new Date(o.createdAt).toLocaleString()}</span>
+      ${o.codes && o.codes.length ? '<br>' + o.codes.map((c) => `<span class="code-line">${esc(c.code)}</span>${c.demo ? '（演示）' : ''}`).join('<br>') : ''}</td>
+      <td>¥${Number(o.total).toFixed(2)}</td>
+      <td><span class="pill st-${o.status}">${statusLabel(o.status)}</span></td>
+      <td>${o.status === 'paid' ? `<button class="btn-green" onclick="confirmOrder('${o.orderNo}')">确认收款并发卡</button>` : ''}${o.status === 'pending' || o.status === 'paid' ? ` <button class="btn-red" onclick="cancelOrder('${o.orderNo}')">取消</button>` : ''}</td>
+    </tr>`).join('')}</table>`;
+}
+async function confirmOrder(no) {
+  if (!confirm('确认已收到 ¥' + (ordersCache.find((o) => o.orderNo === no) || {}).total + ' 吗？确认后卡密会自动发给买家。')) return;
+  try { await api('/api/admin/orders/' + no + '/confirm', { method: 'POST' }); alert('已发卡'); renderOrders(); }
+  catch (e) { alert(e.message); }
+}
+async function cancelOrder(no) {
+  if (!confirm('确定取消该订单吗？')) return;
+  try { await api('/api/admin/orders/' + no + '/cancel', { method: 'POST' }); renderOrders(); }
+  catch (e) { alert(e.message); }
+}
+
+// ---------- 卡密库存 ----------
+async function renderCards() {
+  const body = document.getElementById('tabBody');
+  body.innerHTML = '<div class="card">加载中…</div>';
+  try {
+    const d = await api('/api/admin/cards');
+    cardsSummary = d.byProduct;
+    const items = await fetch('/api/items').then((r) => r.json());
+    const keyItems = items.items.filter((it) => it.category === 'key');
+    body.innerHTML = `
+    <div class="card"><h2>卡密库存</h2>
+      <p class="hint">激活码商品的库存 = 未使用的卡密数。系统已为每个激活码商品预置了演示卡密（明确标注“演示”，无法真实兑换），加了真卡后请点“清空演示卡”。真卡优先发出。</p>
+      <table><tr><th>商品</th><th>未用（真/演示）</th><th>操作</th></tr>
+      ${keyItems.map((it) => { const s = d.byProduct[it.id] || { unused: 0, unusedReal: 0, unusedDemo: 0 };
+        return `<tr><td><b>${esc(it.name)}</b><br><span style="color:#888">¥${it.price}</span></td>
+        <td>${s.unused}（真 ${s.unusedReal} / 演示 ${s.unusedDemo}）</td>
+        <td><button class="btn-ghost" onclick="showAddCard('${it.id}','${esc(it.name)}')">加卡密</button>
+        <button class="btn-ghost" onclick="showCardList('${it.id}','${esc(it.name)}')">查看</button>
+        ${s.unusedDemo ? `<button class="btn-red" onclick="clearDemo('${it.id}')">清空演示卡</button>` : ''}</td></tr>`; }).join('')}
+      </table>
+      <div id="cardDetail"></div>
+    </div>`;
+  } catch (e) { body.innerHTML = `<div class="card">${esc(e.message)}</div>`; }
+}
+function showAddCard(productId, name) {
+  document.getElementById('cardDetail').innerHTML = `
+    <h3>给「${esc(name)}」加卡密</h3>
+    <textarea id="newCodes" placeholder="一行一个卡密，例如：XXXXX-XXXXX-XXXXX"></textarea>
+    <div class="row" style="margin-top:8px"><button class="btn" onclick="addCards('${productId}')">添加</button></div>`;
+}
+async function addCards(productId) {
+  const codes = document.getElementById('newCodes').value;
+  try { const d = await api('/api/admin/cards', { method: 'POST', body: JSON.stringify({ productId, codes }) }); alert('已添加 ' + d.added + ' 条'); renderCards(); }
+  catch (e) { alert(e.message); }
+}
+async function showCardList(productId, name) {
+  try {
+    const d = await api('/api/admin/cards?productId=' + productId);
+    document.getElementById('cardDetail').innerHTML = `
+    <h3>「${esc(name)}」卡密（${d.cards.length}）</h3>
+    <table>${d.cards.map((c) => `<tr><td class="code-line">${esc(c.code)}</td><td>${c.demo ? '演示' : '真卡'}</td><td>${c.used ? '已发 · ' + esc(c.orderNo || '') : '未用'}</td><td>${!c.used ? `<button class="btn-red" onclick="delCard('${c.id}')">删除</button>` : ''}</td></tr>`).join('') || '<tr><td>无</td></tr>'}</table>`;
+  } catch (e) { alert(e.message); }
+}
+async function delCard(id) {
+  if (!confirm('删除这条未使用的卡密？')) return;
+  try { await api('/api/admin/cards/' + id, { method: 'DELETE' }); renderCards(); }
+  catch (e) { alert(e.message); }
+}
+async function clearDemo(productId) {
+  if (!confirm('清空该商品全部未使用的演示卡？')) return;
+  try { const d = await api('/api/admin/cards/clear-demo', { method: 'POST', body: JSON.stringify({ productId }) }); alert('已清空 ' + d.removed + ' 条演示卡'); renderCards(); }
+  catch (e) { alert(e.message); }
+}
+
+// ---------- 收款设置 ----------
+async function renderSettings() {
+  const body = document.getElementById('tabBody');
+  body.innerHTML = '<div class="card">加载中…</div>';
+  try {
+    const s = await api('/api/admin/settings');
+    settingsCache = s;
+    body.innerHTML = `
+    <div class="card"><h2>收款与店铺设置</h2>
+      <label>店名</label><input id="setShopName" value="${esc(s.shopName)}">
+      <label>店铺公告（首页跑马灯 + 进店弹窗）</label><textarea id="setAnnounce" style="min-height:100px">${esc(s.announcement)}</textarea>
+      <label>客服 QQ</label><input id="setQQ" value="${esc(s.contactQQ)}" placeholder="例如 470616117">
+      <label>客服微信</label><input id="setWx" value="${esc(s.contactWechat)}" placeholder="微信号">
+      <h3>收款码（买家付款时扫码用）</h3>
+      <p class="hint">请上传你的微信 / 支付宝个人收款码图片。图片只存在服务器 data/ 里，不会进代码仓库。</p>
+      <label>微信收款码 ${s.hasQrWechat ? '（已上传）' : '（未上传）'}</label>
+      <input type="file" accept="image/*" onchange="uploadQr(this,'qrWechat')">
+      <div id="prevWechat"></div>
+      <label>支付宝收款码 ${s.hasQrAlipay ? '（已上传）' : '（未上传）'}</label>
+      <input type="file" accept="image/*" onchange="uploadQr(this,'qrAlipay')">
+      <div id="prevAlipay"></div>
+      <h3>发货方式</h3>
+      <label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="setAuto" style="width:auto;margin:0" ${s.autoDeliver ? 'checked' : ''}> 自动发货：买家点“我已付款”后直接发卡（不需你确认，适合小额/信任场景；有被白嫖的风险）</label>
+      <p class="hint">不勾选时：买家付款后你需在“订单”里点“确认收款并发卡”，卡密才会发给买家。</p>
+      <h3>修改管理密码</h3>
+      <input type="password" id="setPass" placeholder="新密码（至少6位，不改请留空）">
+      <div style="margin-top:14px"><button class="btn" onclick="saveSettings()">保存设置</button></div>
+    </div>`;
+    loadQrPrev('qrWechat', 'prevWechat');
+    loadQrPrev('qrAlipay', 'prevAlipay');
+  } catch (e) { body.innerHTML = `<div class="card">${esc(e.message)}</div>`; }
+}
+async function loadQrPrev(method, elId) {
+  try {
+    const d = await fetch('/api/pay-qr/' + method).then((r) => r.ok ? r.json() : null);
+    if (d && d.qr) document.getElementById(elId).innerHTML = `<img class="qr-prev" src="${d.qr}">`;
+  } catch (e) { /* 未上传 */ }
+}
+function uploadQr(input, field) {
+  const f = input.files && input.files[0];
+  if (!f) return;
+  const rd = new FileReader();
+  rd.onload = async () => {
+    try { await api('/api/admin/settings', { method: 'POST', body: JSON.stringify({ [field]: rd.result }) }); alert('收款码已上传'); renderSettings(); }
+    catch (e) { alert(e.message); }
+  };
+  rd.readAsDataURL(f);
+}
+async function saveSettings() {
+  const b = {
+    shopName: document.getElementById('setShopName').value.trim(),
+    announcement: document.getElementById('setAnnounce').value,
+    contactQQ: document.getElementById('setQQ').value.trim(),
+    contactWechat: document.getElementById('setWx').value.trim(),
+    autoDeliver: document.getElementById('setAuto').checked,
+  };
+  const np = document.getElementById('setPass').value;
+  if (np) {
+    if (np.length < 6) { alert('新密码至少6位'); return; }
+    b.adminPass = np;
+  }
+  try { await api('/api/admin/settings', { method: 'POST', body: JSON.stringify(b) }); alert('已保存' + (np ? '，管理密码已修改，请牢记' : '')); }
+  catch (e) { alert(e.message); }
+}
+
+// ---------- 备份 ----------
+function renderBackup() {
+  document.getElementById('tabBody').innerHTML = `
+  <div class="card"><h2>备份 / 恢复</h2>
+    <p class="hint">卡密、订单、设置存在服务器 data/ 里，重新部署或换服务器会清空。加了真卡密、收到订单后请经常导出备份。</p>
+    <div class="row" style="margin-top:10px">
+      <button class="btn" onclick="exportBackup()">导出备份文件</button>
+      <label class="btn-ghost" style="cursor:pointer">导入备份文件<input type="file" accept="application/json" style="display:none" onchange="importBackup(this)"></label>
+    </div>
+  </div>`;
+}
+async function exportBackup() {
+  try {
+    const d = await api('/api/admin/backup');
+    const blob = new Blob([JSON.stringify(d, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'xiaopu-backup-' + new Date().toISOString().slice(0, 10) + '.json';
+    a.click();
+  } catch (e) { alert(e.message); }
+}
+function importBackup(input) {
+  const f = input.files && input.files[0];
+  if (!f) return;
+  const rd = new FileReader();
+  rd.onload = async () => {
+    try {
+      const d = JSON.parse(rd.result);
+      if (!confirm('导入将覆盖现有卡密、订单和设置，确定吗？')) return;
+      await api('/api/admin/restore', { method: 'POST', body: JSON.stringify(d) });
+      alert('已恢复');
+    } catch (e) { alert(e.message); }
+  };
+  rd.readAsText(f);
+}
+
+if (TOKEN) {
+  fetch('/api/admin/orders', { headers: { 'x-admin-token': TOKEN } }).then((r) => {
+    if (r.ok) showMain();
+    else { TOKEN = ''; localStorage.removeItem('xp-admin-token'); }
+  }).catch(() => {});
+}
+</script>
+</body>
+</html>
