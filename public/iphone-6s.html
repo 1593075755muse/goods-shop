@@ -31,6 +31,10 @@ a:hover{text-decoration:underline}
 .fig{text-align:center;margin-top:36px}
 .fig img{max-width:100%;height:auto}
 .fig.tall img{max-height:520px;width:auto}
+.fig video{max-width:100%;height:auto;display:block;margin:0 auto}
+.fig.tall video{max-height:520px;width:auto}
+#filmBox{margin-top:28px;text-align:center}
+#filmBox video{width:100%;max-width:760px;height:auto}
 .layered{position:relative;max-width:760px;margin:36px auto 0}
 .layered .back{display:block;width:100%;height:auto}
 .layered .front{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);max-width:62%;max-height:88%;width:auto;height:auto}
@@ -143,13 +147,14 @@ a:hover{text-decoration:underline}
 <header class="hero"><div class="wrap">
 <h1><img src="images/iphone_6s_logo_large.png" alt="iPhone 6s"></h1>
 <p class="tagline">唯一的不同，是处处都不同。</p>
-<p class="links"><a href="#">观看影片</a><a href="#">观看主题演讲</a><a href="#">观看广告</a></p>
+<p class="links"><a href="#" id="watchFilm">观看影片</a><a href="#">观看主题演讲</a><a href="#">观看广告</a></p>
 <div class="hero-imgs reveal">
 <img src="images/opt_hero_spacegray_large.jpg" alt="iPhone 6s 深空灰色">
 <img src="images/opt_hero_silver_large.jpg" alt="iPhone 6s 银色">
 <img src="images/opt_hero_gold_large.jpg" alt="iPhone 6s 金色">
 <img src="images/opt_hero_rosegold_large.jpg" alt="iPhone 6s 玫瑰金色">
 </div>
+<div id="filmBox" hidden><video id="filmVideo" controls preload="none" src="videos/film.mp4"></video></div>
 </div></header>
 <div class="wrap"><p class="intro reveal">从你开始使用 iPhone 6s 的那一刻起，你就会感觉到它是如此不同。指尖一按，3D Touch 就能让你实现更多精彩。Live Photos 能以生动的方式，让你的回忆鲜活呈现。而所有这些，仅仅是个开始。你对 iPhone 6s 的了解越深入，你越会发觉它的创新层层面面，无处不在。</p></div>
 
@@ -158,7 +163,7 @@ a:hover{text-decoration:underline}
     <p class="eyebrow">3D Touch</p>
     <h2 class="headline">新一代 Multi-Touch</h2>
     <p class="copy">第一代 iPhone 为全世界带来了 Multi-Touch 技术，从此改变了我们体验科技的方式。而现在，3D Touch 技术的推出，让你可以做到许多过去无法实现的事情。它可以感应你按压显示屏的力度，并以此做出响应。</p>
-    <div class="fig reveal"><img src="images/3dtouch_startframe_large.jpg" alt="3D Touch"></div>
+    <div class="fig reveal"><video autoplay muted loop playsinline poster="images/3dtouch_startframe_large.jpg" src="videos/3dtouch.mp4"></video></div>
     <div class="fig tall reveal"><img src="images/actions_gallery_hw_large.png" alt="3D Touch"></div>
 <div class="touch-demo reveal"><div class="td-phone" id="tdPhone"><div class="td-screen"><div class="td-clock">9:41</div><div class="td-grid"><i style="background:#5ac8fa"></i><i style="background:#ffcc00"></i><i style="background:#ff2d55"></i><i style="background:#4cd964"></i><i style="background:#5856d6"></i><i style="background:#ff9500"></i><i style="background:#007aff"></i><i style="background:#8e8e93"></i></div><div class="td-peek"><div class="td-peek-img"></div><p>Live Photos · 刚刚</p></div></div><p class="td-hint">按住手机试试 3D Touch，重按弹出预览</p></div></div>
     <p class="more"><a href="#">进一步了解 3D Touch</a> <a href="#">重放</a></p>
@@ -176,7 +181,7 @@ a:hover{text-decoration:underline}
       <div class="stat"><img src="images/livephotos_icon_large.png" alt="Live Photos" style="height:28px;width:auto"><b>Live Photos</b><span>生动如初的记忆</span></div>
     </div>
     <div class="fig layered reveal"><img class="back" src="images/cameras_opt_back_large.jpg" alt=""><img class="front" src="images/cameras_front_large.png" alt="iPhone 6s 相机"></div>
-    <div class="fig tall reveal"><img src="images/livephotos_startframe_large.jpg" alt="Live Photos"></div>
+    <div class="fig tall reveal"><video autoplay muted loop playsinline poster="images/livephotos_startframe_large.jpg" src="videos/livephotos_dog.mp4"></video></div>
     <p class="more"><a href="#">进一步了解 iPhone 6s 的相机</a></p>
   </div>
 </section>
@@ -222,6 +227,7 @@ a:hover{text-decoration:underline}
       </div>
     </div>
     <div class="fig layered reveal"><img class="back" src="images/design_opt_back_large.jpg" alt=""><img class="front" src="images/design_front_large.png" alt="iPhone 6s 设计"></div>
+    <div class="fig tall reveal"><video autoplay muted loop playsinline src="videos/blue_fish.mp4"></video></div>
     <p class="more"><a href="#">进一步了解 iPhone 6s 的设计 ›</a></p>
   </div>
 </section>
@@ -338,6 +344,9 @@ td.addEventListener('mouseleave',off);
 td.addEventListener('touchstart',on,{passive:false});
 td.addEventListener('touchend',off);
 }
+
+var wf=document.getElementById('watchFilm'),fb=document.getElementById('filmBox'),fv=document.getElementById('filmVideo');
+if(wf&&fb&&fv){wf.addEventListener('click',function(e){e.preventDefault();var show=fb.hidden;fb.hidden=!show;if(show){fv.play();}else{fv.pause();}});}
 </script>
 </body>
 </html>
