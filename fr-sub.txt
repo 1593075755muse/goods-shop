@@ -1,1 +1,1 @@
-vless://b7a96f0d-0a9e-4714-9a8a-8f267f5f7762@fr.onderexa.cc.cd:443?encryption=none&security=tls&sni=fr.onderexa.cc.cd&type=ws&host=fr.onderexa.cc.cd&path=%2Fvless#NeoHeberg-FR
+vless://b7a96f0d-0a9e-4714-9a8a-8f267f5f7762@fr.onderexa.cc.cd:443?encryption=none&security=none&type=tcp#NeoHeberg-FR
