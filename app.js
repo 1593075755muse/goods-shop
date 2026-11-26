@@ -10,6 +10,7 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
+const { getCodes } = require('./inbox'); // 验证码收件箱（可插拔，见 inbox.js）
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -44,6 +45,7 @@ const DEFAULT_SETTINGS = {
   qrWechat: '',   // base64 data URI，管理后台上传
   qrAlipay: '',   // base64 data URI，管理后台上传
   autoDeliver: false, // true = 买家点“我已付款”后直接发卡；false = 需店主后台确认收款
+  publicBaseUrl: '', // 对外访问地址，如 https://shop.example.com；为空则发卡时给相对路径 /inbox/<token>
   adminPass: 'xiaopu123', // 首次登录密码，请在管理后台尽快修改
 };
 let settings = Object.assign({}, DEFAULT_SETTINGS, loadJson('settings.json', {}));
@@ -74,10 +76,11 @@ function makeDemoKey() {
 }
 // 首次启动：给激活码商品预置演示卡密（明确标注 demo，仅供测试流程）
 // 店主在管理后台加了真卡密后，可一键清空演示卡。
+// 账号类商品（kind === 'account'）不预置演示卡：假账号绝不能发给买家。
 function seedDemoCards() {
   let changed = false;
   for (const it of items) {
-    if (it.category !== 'key') continue;
+    if (it.category !== 'key' || it.kind === 'account') continue;
     const existing = cards.filter((c) => c.productId === it.id);
     if (existing.length > 0) continue;
     for (let i = 0; i < it.stock; i++) {
@@ -185,6 +188,35 @@ app.get('/api/pay-qr/:method', (req, res) => {
 });
 
 // ---------------- 下单 / 付款 / 查单 ----------------
+// 收件箱：买家凭发卡时给的链接查该账号邮箱收到的最新验证码
+// GET /inbox/:token -> { email, codes: [{ otp, time }] }（最新在前）
+// token 只发给下单买家本人；未发货/不存在的 token 一律 404，不透露原因。
+const inboxHits = new Map(); // token -> [时间戳ms]，简易限流：每 token 每分钟最多 30 次
+function inboxRateLimited(token) {
+  const now = Date.now();
+  const arr = (inboxHits.get(token) || []).filter((t) => now - t < 60000);
+  if (arr.length >= 30) return true;
+  arr.push(now);
+  inboxHits.set(token, arr);
+  return false;
+}
+app.get('/inbox/:token', async (req, res) => {
+  const token = req.params.token;
+  if (inboxRateLimited(token)) return res.status(429).json({ error: '请求太频繁，稍后再试' });
+  const card = cards.find((c) => c.inboxToken === token);
+  if (!card || !card.used || !card.orderNo || !card.email) {
+    return res.status(404).json({ error: '收件箱链接无效' });
+  }
+  let codes;
+  try {
+    codes = (await getCodes(card.email)) || [];
+  } catch (e) {
+    console.error('inbox read failed', e.message);
+    return res.status(502).json({ error: '收件箱读取失败，稍后再试' });
+  }
+  res.json({ email: card.email, codes });
+});
+
 // 下单：生成待付款订单（不扣库存、不发卡）
 app.post('/api/orders', (req, res) => {
   const { productId, qty, email, payMethod } = req.body || {};
@@ -241,6 +273,7 @@ app.post('/api/orders/:orderNo/paid', (req, res) => {
 });
 
 // 发卡（内部）：激活码商品扣卡密，其他商品仅标记已发货、需客服联系发货
+// 账号类商品（kind === 'account'）：发账号 + 密码 + 收件箱链接（inboxUrl）
 function deliverOrder(o) {
   const it = items.find((x) => x.id === o.productId);
   if (!it) return { error: '商品不存在' };
@@ -252,7 +285,17 @@ function deliverOrder(o) {
       c.orderNo = o.orderNo;
       c.usedAt = new Date().toISOString();
     }
-    o.codes = picked.map((c) => ({ code: c.code, demo: !!c.demo }));
+    if (it.kind === 'account') {
+      const base = (settings.publicBaseUrl || '').replace(/\/+$/, '');
+      o.codes = picked.map((c) => ({
+        code: c.code, demo: !!c.demo,
+        email: c.email || null,
+        password: c.password || null,
+        inboxUrl: c.inboxToken ? base + '/inbox/' + c.inboxToken : null,
+      }));
+    } else {
+      o.codes = picked.map((c) => ({ code: c.code, demo: !!c.demo }));
+    }
     saveCards();
   }
   o.status = 'delivered';
@@ -376,6 +419,39 @@ app.post('/api/admin/cards', requireAdmin, (req, res) => {
   res.json({ added, total: cards.filter((c) => c.productId === productId).length });
 });
 
+// 加账号卡（Muse 账号类商品专用）：一次加一个账号
+// POST /api/admin/cards/account { productId, email, password, inboxToken? }
+// inboxToken 不传则自动生成 32 位随机串；传了必须 16-64 位字母数字且唯一。
+// 卡的 code 字段存邮箱（兼容旧的卡密字段），密码不随响应返回。
+app.post('/api/admin/cards/account', requireAdmin, (req, res) => {
+  const { productId, email, password, inboxToken } = req.body || {};
+  const it = items.find((x) => x.id === productId);
+  if (!it) return res.status(404).json({ error: '商品不存在' });
+  if (it.kind !== 'account') return res.status(400).json({ error: '该商品不是账号类商品' });
+  const em = String(email || '').trim();
+  if (!/^\S+@\S+\.\S+$/.test(em)) return res.status(400).json({ error: '请填写正确的账号邮箱' });
+  const pw = String(password || '');
+  if (!pw) return res.status(400).json({ error: '请填写账号密码' });
+  if (cards.some((c) => c.productId === productId && c.email === em && !c.used)) {
+    return res.status(400).json({ error: '该邮箱的账号已在库存中' });
+  }
+  let token = String(inboxToken || '').trim();
+  if (token) {
+    if (!/^[A-Za-z0-9_-]{16,64}$/.test(token)) return res.status(400).json({ error: 'inboxToken 需为 16-64 位字母数字' });
+    if (cards.some((c) => c.inboxToken === token)) return res.status(400).json({ error: 'inboxToken 已被占用' });
+  } else {
+    do { token = crypto.randomBytes(16).toString('hex'); } while (cards.some((c) => c.inboxToken === token));
+  }
+  const card = {
+    id: 'c' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8),
+    productId, code: em, email: em, password: pw, inboxToken: token,
+    demo: false, used: false, orderNo: null, usedAt: null,
+  };
+  cards.push(card);
+  saveCards();
+  res.json({ ok: true, card: { id: card.id, productId, email: em, inboxToken: token } });
+});
+
 // 删除一条未使用的卡密
 app.delete('/api/admin/cards/:id', requireAdmin, (req, res) => {
   const idx = cards.findIndex((c) => c.id === req.params.id);
@@ -405,6 +481,7 @@ app.get('/api/admin/settings', requireAdmin, (req, res) => {
     hasQrWechat: !!settings.qrWechat,
     hasQrAlipay: !!settings.qrAlipay,
     autoDeliver: !!settings.autoDeliver,
+    publicBaseUrl: settings.publicBaseUrl || '',
   });
 });
 app.post('/api/admin/settings', requireAdmin, (req, res) => {
@@ -416,6 +493,7 @@ app.post('/api/admin/settings', requireAdmin, (req, res) => {
   if (typeof b.qrWechat === 'string') settings.qrWechat = b.qrWechat.slice(0, 500000);
   if (typeof b.qrAlipay === 'string') settings.qrAlipay = b.qrAlipay.slice(0, 500000);
   if (typeof b.autoDeliver === 'boolean') settings.autoDeliver = b.autoDeliver;
+  if (typeof b.publicBaseUrl === 'string') settings.publicBaseUrl = b.publicBaseUrl.trim().replace(/\/+$/, '').slice(0, 200);
   if (typeof b.adminPass === 'string' && b.adminPass.length >= 6) settings.adminPass = b.adminPass;
   saveSettings();
   res.json({ ok: true });

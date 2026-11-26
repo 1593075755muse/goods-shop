@@ -915,7 +915,16 @@ async function loadOrderDetail(orderNo) {
 function renderOrderDetail(o, fromQuery) {
   const codesHtml = o.status === 'delivered' && o.codes && o.codes.length ? `
     <div class="seller-card"><h3>🔑 您的卡密（请妥善保管）</h3>
-      ${o.codes.map((c) => `<div class="keybox"><code>${esc(c.code)}</code>${c.demo ? '<div class="kwarn">演示卡密，仅供展示，无法真实兑换</div>' : '<div class="kwarn">请尽快使用，勿向他人泄露</div>'}<button onclick="copyText('${esc(c.code)}')">复制卡密</button></div>`).join('')}
+      ${o.codes.map((c) => {
+        if (c.email) {
+          return `<div class="keybox"><div style="text-align:left;font-size:14px;line-height:2">
+            <div>📧 邮箱：<code>${esc(c.email)}</code> <button onclick="copyText(this.getAttribute('data-v'))" data-v="${esc(c.email)}">复制</button></div>
+            <div>🔑 密码：<code>${esc(c.password || '')}</code> <button onclick="copyText(this.getAttribute('data-v'))" data-v="${esc(c.password || '')}">复制</button></div>
+            <div>📩 接验证码：<a href="${esc(c.inboxUrl || '')}" target="_blank" rel="noopener">点这里查看验证码</a> <button onclick="copyText(this.getAttribute('data-v'))" data-v="${esc(c.inboxUrl || '')}">复制链接</button></div>
+          </div><div class="kwarn">请尽快使用，勿向他人泄露；登录 Muse 收不到验证码时，点上面的接验证码链接查看。</div></div>`;
+        }
+        return `<div class="keybox"><code>${esc(c.code)}</code>${c.demo ? '<div class="kwarn">演示卡密，仅供展示，无法真实兑换</div>' : '<div class="kwarn">请尽快使用，勿向他人泄露</div>'}<button onclick="copyText('${esc(c.code)}')">复制卡密</button></div>`;
+      }).join('')}
     </div>` : '';
   const tip = o.status === 'pending' ? '<div class="note">订单待付款：请返回商品页重新下单，或联系客服。</div>'
     : o.status === 'paid' ? '<div class="note">已收到您的“我已付款”，店主确认收款后会自动发卡，卡密会显示在这里，请稍等片刻再刷新查看。</div>'
