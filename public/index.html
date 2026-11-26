@@ -3,39 +3,59 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>小铺子 · 数字卡密自动交易平台</title>
+<meta name="theme-color" content="#faf9fc">
+<meta name="description" content="小铺子 · Muse 账号（10亿 tokens，永不过期），付款确认后自动发卡。">
+<title>小铺子 · Muse 账号 10亿 tokens</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
-    --bg: #f5f5f7;
-    --bg-white: #fff;
-    --text: #1d1d1f;
-    --text-secondary: #6e6e73;
-    --text-tertiary: #86868b;
-    --accent: #0071e3;
-    --accent-hover: #0066cc;
-    --border: #d2d2d7;
-    --divider: rgba(0,0,0,.08);
-    --green: #34c759;
-    --green-bg: #e8f5e9;
-    --shadow-sm: 0 1px 2px rgba(0,0,0,.04);
-    --shadow-md: 0 4px 16px rgba(0,0,0,.06);
-    --shadow-lg: 0 8px 30px rgba(0,0,0,.08);
-    --radius-sm: 12px;
-    --radius-md: 18px;
-    --radius-lg: 20px;
+    --bg: #faf9fc;
+    --bg-white: #ffffff;
+    --text: #3b3b4e;
+    --text-secondary: #7d7d90;
+    --text-tertiary: #a9a9bb;
+    --accent: #8b7cf6;
+    --accent2: #7fb0f2;
+    --accent3: #6fd8c9;
+    --grad: linear-gradient(135deg, #b39df5 0%, #93b8f5 52%, #8adcd0 100%);
+    --grad-soft: linear-gradient(135deg, #cfc2fa 0%, #bcd6fa 52%, #b3ece2 100%);
+    --accent-hover: #7a68ee;
+    --border: #e9e4f2;
+    --divider: rgba(80,66,130,.08);
+    --green: #2ea37e;
+    --green-bg: rgba(46,163,126,.10);
+    --shadow-sm: 0 2px 10px rgba(139,124,200,.07);
+    --shadow-md: 0 10px 28px rgba(139,124,200,.12);
+    --shadow-lg: 0 18px 48px rgba(139,124,200,.16);
+    --glow: 0 6px 22px rgba(167,139,250,.30);
+    --radius-sm: 14px;
+    --radius-md: 20px;
+    --radius-lg: 24px;
     --radius-pill: 999px;
     --max-width: 1200px;
   }
   html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
-  body { font-family: -apple-system, "SF Pro Display", "PingFang SC", "Microsoft YaHei", sans-serif; background: var(--bg); color: var(--text); line-height: 1.47059; font-size: 17px; }
-  a { color: var(--accent); text-decoration: none; }
+  body {
+    font-family: -apple-system, "SF Pro Display", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    background-color: var(--bg);
+    background-image:
+      radial-gradient(720px 420px at 50% -80px, rgba(196,174,250,.30), transparent 65%),
+      radial-gradient(560px 380px at 92% 108%, rgba(147,184,245,.22), transparent 60%),
+      radial-gradient(480px 320px at 4% 92%, rgba(138,220,208,.16), transparent 60%);
+    background-attachment: fixed;
+    color: var(--text);
+    line-height: 1.55;
+    font-size: 17px;
+    min-height: 100vh;
+  }
+  ::selection { background: rgba(179,157,245,.35); color: #3b3b4e; }
+  a { color: #7c6ff0; text-decoration: none; }
   a:hover { text-decoration: underline; }
   button { font-family: inherit; cursor: pointer; }
 
-  /* 顶部导航：白色毛玻璃 */
+  /* 顶部导航：浅色毛玻璃 */
   .topbar {
-    background: rgba(255,255,255,.72);
+    background: rgba(250,249,252,.82);
     backdrop-filter: saturate(180%) blur(20px);
     -webkit-backdrop-filter: saturate(180%) blur(20px);
     border-bottom: 1px solid var(--divider);
@@ -46,10 +66,20 @@
     max-width: var(--max-width);
     margin: 0 auto;
   }
-  .topbar .logo { font-size: 17px; font-weight: 600; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .topbar .logo { font-size: 17px; font-weight: 600; flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; }
+  .logo-badge {
+    width: 32px; height: 32px; flex-shrink: 0;
+    border-radius: 10px;
+    background: var(--grad);
+    color: #fff;
+    font-size: 18px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 14px rgba(167,139,250,.35);
+  }
+  .logo-text { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .topbar .logo small { display: block; font-size: 11px; font-weight: 400; color: var(--text-tertiary); }
   .topbar .obtn {
-    background: var(--bg);
+    background: #ffffff;
     color: var(--text);
     border: 1px solid var(--border);
     border-radius: var(--radius-pill);
@@ -57,73 +87,121 @@
     font-size: 13px;
     font-weight: 500;
     white-space: nowrap;
-    transition: background .15s, border-color .15s;
+    transition: background .15s, border-color .15s, box-shadow .15s;
   }
-  .topbar .obtn:hover { background: var(--border); }
+  .topbar .obtn:hover { background: #f6f2fd; border-color: #d9cdf5; box-shadow: var(--shadow-sm); }
   .topbar .menu-btn { background: none; border: none; color: var(--text); font-size: 22px; line-height: 1; padding: 6px; }
 
-  /* Hero 区：苹果风大标题 */
+  /* Hero 区：浅色柔美 */
   .hero {
     max-width: var(--max-width);
     margin: 0 auto;
-    padding: 56px 16px 40px;
+    padding: 68px 16px 44px;
     text-align: center;
+    position: relative;
+  }
+  .hero-eyebrow {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .35em;
+    text-indent: .35em;
+    color: #8b7cf6;
+    margin-bottom: 16px;
   }
   .hero h1 {
-    font-size: clamp(40px, 6vw, 64px);
+    font-size: clamp(42px, 7vw, 72px);
     font-weight: 600;
-    letter-spacing: -.003em;
+    letter-spacing: -.015em;
     line-height: 1.1;
     color: var(--text);
-    margin-bottom: 12px;
+    margin-bottom: 14px;
+  }
+  .hero h1 .grad {
+    display: block;
+    background: linear-gradient(135deg, #9d86f2 0%, #7fa8ef 52%, #5ccfc0 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
   }
   .hero p {
-    font-size: clamp(17px, 2vw, 21px);
+    font-size: clamp(16px, 2vw, 20px);
     font-weight: 400;
     color: var(--text-secondary);
-    line-height: 1.4;
-    max-width: 580px;
+    line-height: 1.55;
+    max-width: 600px;
     margin: 0 auto;
+  }
+  .hero-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 24px;
+  }
+  .hero-chips span {
+    padding: 7px 14px;
+    border-radius: var(--radius-pill);
+    background: #ffffff;
+    border: 1px solid var(--border);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    box-shadow: var(--shadow-sm);
+  }
+  .hero-chips span:first-child {
+    border-color: #d9cdf5;
+    color: #6d5bd0;
+    background: #f3efff;
   }
   .hero .contact-link {
     display: inline-block;
-    margin-top: 28px;
-    padding: 10px 22px;
+    margin-top: 30px;
+    padding: 11px 26px;
     font-size: 15px;
-    font-weight: 500;
-    color: var(--accent);
-    border: 1px solid var(--accent);
+    font-weight: 600;
+    color: #fff;
+    background: var(--grad);
+    border: none;
     border-radius: var(--radius-pill);
-    transition: background .15s, color .15s;
+    box-shadow: var(--glow);
+    transition: filter .15s, transform .15s;
   }
   .hero .contact-link:hover {
-    background: var(--accent);
-    color: #fff;
+    filter: brightness(1.04);
+    transform: translateY(-1px);
     text-decoration: none;
   }
 
   /* 公告栏 */
   .marquee {
-    background: var(--bg-white);
+    background: #ffffff;
     border-top: 1px solid var(--divider);
     border-bottom: 1px solid var(--divider);
     padding: 10px 16px;
     font-size: 13px;
     color: var(--text-secondary);
-    display: flex; gap: 8px; align-items: center; overflow: hidden;
+    display: flex; gap: 10px; align-items: center; overflow: hidden;
     max-width: var(--max-width);
     margin: 0 auto;
   }
+  .mq-dot {
+    width: 8px; height: 8px; flex-shrink: 0;
+    border-radius: 50%;
+    background: var(--grad);
+    box-shadow: 0 0 10px rgba(167,139,250,.55);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse { 50% { opacity: .35; } }
   .marquee span { white-space: nowrap; animation: scroll 20s linear infinite; display: inline-block; }
   @keyframes scroll { from { transform: translateX(100%);} to { transform: translateX(-100%);} }
 
   /* 页签 */
   .tabs {
     display: flex;
-    background: var(--bg-white);
+    background: rgba(255,255,255,.65);
     border-bottom: 1px solid var(--divider);
     position: sticky;
-    top: 52px;
+    top: 53px;
     z-index: 20;
     max-width: var(--max-width);
     margin: 0 auto;
@@ -139,9 +217,7 @@
     position: relative;
     transition: color .15s;
   }
-  .tabs button.active {
-    color: var(--text);
-  }
+  .tabs button.active { color: var(--text); }
   .tabs button.active::after {
     content: '';
     position: absolute;
@@ -149,9 +225,9 @@
     left: 50%;
     transform: translateX(-50%);
     width: 40px;
-    height: 2px;
-    background: var(--text);
-    border-radius: 1px;
+    height: 3px;
+    background: var(--grad);
+    border-radius: 2px;
   }
 
   /* 分类横向滚动 */
@@ -161,7 +237,7 @@
     padding: 16px 16px 8px;
     overflow-x: auto;
     scrollbar-width: none;
-    background: var(--bg);
+    background: transparent;
     max-width: var(--max-width);
     margin: 0 auto;
   }
@@ -171,19 +247,21 @@
     padding: 8px 16px;
     border-radius: var(--radius-pill);
     border: 1px solid var(--border);
-    background: var(--bg-white);
+    background: #ffffff;
     font-size: 13px;
     font-weight: 500;
     color: var(--text-secondary);
     transition: all .15s;
+    box-shadow: var(--shadow-sm);
   }
-  .cats button:hover { border-color: var(--text); color: var(--text); }
+  .cats button:hover { border-color: #cfc2f5; color: var(--text); }
   .cats button.active {
-    background: var(--text);
-    color: var(--bg-white);
-    border-color: var(--text);
+    background: var(--grad);
+    color: #fff;
+    border-color: transparent;
+    box-shadow: 0 4px 14px rgba(167,139,250,.35);
   }
-  .cats button .n { opacity: .6; font-size: 11px; margin-left: 4px; }
+  .cats button .n { opacity: .65; font-size: 11px; margin-left: 4px; }
 
   /* 商品网格：响应式列数 */
   .grid {
@@ -198,17 +276,19 @@
   @media (min-width: 1024px) { .grid { grid-template-columns: repeat(4, 1fr); gap: 24px; padding: 24px 24px 100px; } }
 
   .card {
-    background: var(--bg);
+    background: #ffffff;
+    border: 1px solid var(--border);
     border-radius: var(--radius-md);
     overflow: hidden;
     cursor: pointer;
     box-shadow: var(--shadow-sm);
-    transition: transform .15s, box-shadow .15s;
+    transition: transform .18s, box-shadow .18s, border-color .18s;
     display: flex;
     flex-direction: column;
   }
   .card:hover {
-    transform: translateY(-2px);
+    transform: translateY(-3px);
+    border-color: #cfc2f5;
     box-shadow: var(--shadow-md);
   }
   .thumb {
@@ -220,13 +300,13 @@
     position: relative;
     overflow: hidden;
   }
-  /* 柔和色块遮罩：在 emoji 图标上叠加半透明白色渐变，降低饱和度 */
+  /* 浅色柔光遮罩：淡淡的白色光晕，柔和色块 */
   .thumb::after,
   .detail-poster::after {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(180deg, rgba(255,255,255,.35) 0%, rgba(255,255,255,.15) 50%, rgba(255,255,255,0) 100%);
+    background: linear-gradient(180deg, rgba(255,255,255,.34) 0%, rgba(255,255,255,.06) 55%, rgba(255,255,255,0) 100%);
     pointer-events: none;
     z-index: 1;
   }
@@ -249,7 +329,7 @@
   .tag-auto {
     display: inline-block;
     font-size: 11px;
-    font-weight: 500;
+    font-weight: 600;
     color: var(--green);
     margin-top: 6px;
     background: none;
@@ -258,7 +338,7 @@
   }
   .price {
     color: var(--text);
-    font-weight: 600;
+    font-weight: 700;
     font-size: 19px;
     margin-top: auto;
     padding-top: 8px;
@@ -268,7 +348,7 @@
 
   /* 详情页 */
   .detail-top {
-    background: rgba(255,255,255,.72);
+    background: rgba(250,249,252,.82);
     backdrop-filter: saturate(180%) blur(20px);
     -webkit-backdrop-filter: saturate(180%) blur(20px);
     border-bottom: 1px solid var(--divider);
@@ -290,8 +370,8 @@
     overflow: hidden;
   }
   .detail-body {
-    background: var(--bg-white);
-    padding: 24px 16px;
+    background: transparent;
+    padding: 24px 16px 8px;
     max-width: var(--max-width);
     margin: 0 auto;
   }
@@ -299,48 +379,76 @@
     font-size: 24px;
     font-weight: 600;
     line-height: 1.3;
-    letter-spacing: -.003em;
+    letter-spacing: -.01em;
   }
   .detail-body .price {
-    font-size: 28px;
-    font-weight: 600;
+    font-size: 30px;
+    font-weight: 700;
     color: var(--text);
     margin: 10px 0 4px;
   }
   .detail-body .price small { font-size: 17px; color: var(--text-secondary); }
+  .feat-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 16px;
+  }
+  .feat-strip span {
+    padding: 6px 12px;
+    border-radius: var(--radius-pill);
+    background: #ffffff;
+    border: 1px solid var(--border);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    box-shadow: var(--shadow-sm);
+  }
+  .feat-strip span:first-child {
+    border-color: #d9cdf5;
+    color: #6d5bd0;
+    background: #f3efff;
+  }
   .shop-row {
     display: flex;
     align-items: center;
     gap: 12px;
-    background: var(--bg);
-    margin: 16px 0;
+    background: #ffffff;
+    border: 1px solid var(--border);
+    margin: 16px auto;
     padding: 16px;
     border-radius: var(--radius-md);
     max-width: var(--max-width);
-    margin-left: auto;
-    margin-right: auto;
+    box-shadow: var(--shadow-sm);
   }
-  .shop-row .avatar { width: 44px; height: 44px; font-size: 24px; background: var(--bg); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+  .shop-row .avatar {
+    width: 44px; height: 44px; flex-shrink: 0;
+    font-size: 20px; font-weight: 700; color: #fff;
+    background: var(--grad);
+    border-radius: 13px;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 14px rgba(167,139,250,.35);
+  }
   .shop-row .nm { flex: 1; font-size: 15px; font-weight: 600; }
   .shop-row button {
     border: 1px solid var(--border);
     color: var(--text);
-    background: var(--bg-white);
+    background: #ffffff;
     border-radius: var(--radius-pill);
     padding: 8px 16px;
     font-size: 13px;
     font-weight: 500;
     transition: border-color .15s, background .15s;
   }
-  .shop-row button:hover { border-color: var(--text); background: var(--bg); }
+  .shop-row button:hover { border-color: #cfc2f5; background: #f8f5fe; }
   .desc-box {
-    background: var(--bg-white);
-    margin: 0 0 16px;
+    background: #ffffff;
+    border: 1px solid var(--border);
+    margin: 0 auto 16px;
     padding: 20px 16px;
     border-radius: var(--radius-md);
     max-width: var(--max-width);
-    margin-left: auto;
-    margin-right: auto;
+    box-shadow: var(--shadow-sm);
   }
   .desc-box h3 { font-size: 17px; font-weight: 600; margin-bottom: 12px; }
   .desc-box .warn {
@@ -348,7 +456,7 @@
     font-size: 14px;
     line-height: 1.7;
     white-space: pre-line;
-    background: var(--bg);
+    background: #faf8fd;
     padding: 12px;
     border-radius: var(--radius-sm);
   }
@@ -365,7 +473,7 @@
   .buybar {
     position: fixed;
     left: 0; right: 0; bottom: 0;
-    background: rgba(255,255,255,.85);
+    background: rgba(250,249,252,.88);
     backdrop-filter: saturate(180%) blur(20px);
     -webkit-backdrop-filter: saturate(180%) blur(20px);
     border-top: 1px solid var(--divider);
@@ -389,27 +497,29 @@
     padding: 0 8px;
     flex: 1;
   }
-  .buybar .bb span { font-size: 22px; line-height: 1; }
+  .buybar .bb span { line-height: 1; display: flex; align-items: center; justify-content: center; }
+  .buybar .bb svg { width: 22px; height: 22px; display: block; }
   .buybar .buy-now {
     flex: 2;
     border: none;
     border-radius: var(--radius-pill);
     padding: 14px;
     font-size: 17px;
-    font-weight: 600;
+    font-weight: 700;
     color: #fff;
-    background: var(--accent);
-    transition: background .15s;
+    background: var(--grad);
+    box-shadow: var(--glow);
+    transition: filter .15s, transform .15s;
   }
-  .buybar .buy-now:hover { background: var(--accent-hover); }
-  .buybar .buy-now:disabled { background: var(--border); color: var(--text-tertiary); }
+  .buybar .buy-now:hover { filter: brightness(1.04); }
+  .buybar .buy-now:disabled { background: #e9e6f0; color: var(--text-tertiary); box-shadow: none; }
 
   /* 底部弹窗 */
   .modal {
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,.4);
+    background: rgba(80,66,130,.30);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     z-index: 40;
@@ -418,7 +528,9 @@
   }
   .modal.open { display: flex; }
   .sheet {
-    background: var(--bg-white);
+    background: #ffffff;
+    border: 1px solid var(--border);
+    border-bottom: none;
     width: 100%;
     max-width: 600px;
     border-radius: var(--radius-lg) var(--radius-lg) 0 0;
@@ -428,7 +540,15 @@
     box-shadow: var(--shadow-lg);
     position: relative;
   }
-  .sheet .grab { width: 44px; height: 5px; background: var(--border); border-radius: 3px; margin: 0 auto 16px; }
+  .sheet::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 20%; right: 20%;
+    height: 3px;
+    background: var(--grad-soft);
+    border-radius: 2px;
+  }
+  .sheet .grab { width: 44px; height: 5px; background: #e6e0f2; border-radius: 3px; margin: 0 auto 16px; }
   .sheet h2 { font-size: 19px; font-weight: 600; margin-bottom: 12px; }
   .sheet h3 { font-size: 15px; font-weight: 600; margin: 20px 0 8px; }
   .mini-goods { display: flex; gap: 12px; align-items: center; }
@@ -436,7 +556,7 @@
   .mini-goods .t { flex: 1; min-width: 0; }
   .mini-goods .t b { font-size: 15px; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .desc-scroll {
-    background: var(--bg);
+    background: #faf8fd;
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
     padding: 12px;
@@ -453,7 +573,7 @@
     width: 40px;
     height: 40px;
     border: 1px solid var(--border);
-    background: var(--bg-white);
+    background: #ffffff;
     font-size: 18px;
     color: var(--text);
     border-radius: 0;
@@ -461,13 +581,14 @@
   }
   .stepper button:first-child { border-radius: var(--radius-sm) 0 0 var(--radius-sm); }
   .stepper button:last-child { border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
-  .stepper button:disabled { color: var(--border); }
-  .stepper button:hover:not(:disabled) { background: var(--bg); }
+  .stepper button:disabled { color: #d5d0e4; }
+  .stepper button:hover:not(:disabled) { background: #f8f5fe; }
   .stepper .qty {
     width: 56px;
     text-align: center;
     border-top: 1px solid var(--border);
     border-bottom: 1px solid var(--border);
+    background: #fbfafc;
     line-height: 38px;
     font-size: 17px;
     font-weight: 500;
@@ -479,15 +600,16 @@
     border-radius: var(--radius-sm);
     font-size: 15px;
     margin-top: 6px;
-    background: var(--bg-white);
+    background: #fbfafc;
     color: var(--text);
     transition: border-color .15s, box-shadow .15s;
   }
   input[type="text"]:focus, input[type="email"]:focus, textarea:focus {
     outline: none;
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(0,113,227,.15);
+    border-color: #b39df5;
+    box-shadow: 0 0 0 3px rgba(179,157,245,.20);
   }
+  input::placeholder { color: var(--text-tertiary); }
   .hint { font-size: 12px; color: var(--text-tertiary); margin-top: 4px; line-height: 1.5; }
   .pay-methods { display: flex; gap: 10px; margin-top: 8px; }
   .pay-methods button {
@@ -495,111 +617,115 @@
     padding: 14px;
     border-radius: var(--radius-sm);
     border: 1px solid var(--border);
-    background: var(--bg-white);
+    background: #ffffff;
     font-size: 15px;
     font-weight: 500;
     color: var(--text);
     transition: all .15s;
   }
-  .pay-methods button:hover { border-color: var(--text); }
+  .pay-methods button:hover { border-color: #cfc2f5; }
   .pay-methods button.sel {
-    border-color: var(--accent);
-    color: var(--accent);
-    background: rgba(0,113,227,.08);
+    border-color: #b39df5;
+    color: #6d5bd0;
+    background: #f3efff;
+    box-shadow: 0 0 0 3px rgba(179,157,245,.15);
   }
   .sheet .foot { display: flex; align-items: center; gap: 12px; margin-top: 20px; }
   .sheet .foot .total { flex: 1; font-size: 15px; }
-  .sheet .foot .total b { color: var(--text); font-size: 22px; font-weight: 600; }
+  .sheet .foot .total b { color: var(--text); font-size: 22px; font-weight: 700; }
   .btn-orange {
     border: none;
     border-radius: var(--radius-pill);
     padding: 14px 28px;
     font-size: 17px;
-    font-weight: 600;
+    font-weight: 700;
     color: #fff;
-    background: var(--accent);
-    transition: background .15s;
+    background: var(--grad);
+    box-shadow: var(--glow);
+    transition: filter .15s;
   }
-  .btn-orange:hover { background: var(--accent-hover); }
-  .btn-orange:disabled { background: var(--border); color: var(--text-tertiary); }
+  .btn-orange:hover { filter: brightness(1.04); }
+  .btn-orange:disabled { background: #e9e6f0; color: var(--text-tertiary); box-shadow: none; }
   .btn-ghost {
     border: 1px solid var(--border);
     border-radius: var(--radius-pill);
     padding: 12px 22px;
     font-size: 15px;
     font-weight: 500;
-    background: var(--bg-white);
+    background: #ffffff;
     color: var(--text);
     transition: border-color .15s, background .15s;
   }
-  .btn-ghost:hover { border-color: var(--text); background: var(--bg); }
+  .btn-ghost:hover { border-color: #cfc2f5; background: #f8f5fe; }
 
   /* 支付页 */
   .pay-qr { text-align: center; padding: 10px 0; }
-  .pay-qr img { width: 240px; height: 240px; object-fit: contain; border: 1px solid var(--border); border-radius: var(--radius-md); }
+  .pay-qr img { width: 240px; height: 240px; object-fit: contain; background: #fff; padding: 10px; border: 1px solid var(--border); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); }
   .pay-qr .noqr { width: 240px; height: 240px; margin: 0 auto; border: 1px dashed var(--border); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; color: var(--text-tertiary); font-size: 14px; padding: 20px; line-height: 1.6; }
   .order-no { text-align: center; font-size: 15px; margin: 6px 0; color: var(--text-secondary); }
   .order-no b { color: var(--text); }
 
-  /* 卡密盒 */
+  /* 账号盒 */
   .keybox {
-    background: var(--bg);
-    border: 1px dashed var(--border);
+    background: rgba(179,157,245,.08);
+    border: 1px dashed rgba(139,124,246,.50);
     border-radius: var(--radius-sm);
     padding: 14px;
     margin: 12px 0;
   }
-  .keybox code { display: block; font-size: 17px; letter-spacing: 1px; padding: 8px 0; word-break: break-all; font-family: -apple-system, "SF Mono", monospace; }
+  .keybox code { display: block; font-size: 17px; letter-spacing: 1px; padding: 8px 0; word-break: break-all; font-family: -apple-system, "SF Mono", "Menlo", monospace; color: var(--text); }
+  .keybox .kv-label { display: inline-block; min-width: 68px; color: var(--text-secondary); font-size: 13px; }
   .keybox .kwarn { font-size: 12px; color: var(--text-secondary); margin-top: 8px; }
   .keybox button {
     margin-top: 8px;
     border: 1px solid var(--border);
     color: var(--text);
-    background: var(--bg-white);
+    background: #ffffff;
     border-radius: var(--radius-pill);
     padding: 8px 18px;
     font-size: 13px;
     font-weight: 500;
   }
-  .keybox button:hover { border-color: var(--text); }
+  .keybox button:hover { border-color: #cfc2f5; }
 
-  .status-pill { display: inline-block; font-size: 12px; font-weight: 500; border-radius: var(--radius-pill); padding: 4px 10px; }
-  .st-pending { background: #fff4d6; color: #8a6000; }
-  .st-paid { background: #dbeafe; color: #1e40af; }
-  .st-delivered { background: #dcfce7; color: #166534; }
-  .st-cancelled { background: #fee2e2; color: #991b1b; }
+  .status-pill { display: inline-block; font-size: 12px; font-weight: 600; border-radius: var(--radius-pill); padding: 4px 10px; }
+  .st-pending { background: #fdf3dd; color: #92600a; }
+  .st-paid { background: #e6f0fd; color: #2f6fb2; }
+  .st-delivered { background: #e0f6ec; color: #1f7a54; }
+  .st-cancelled { background: #fdecef; color: #b03a4b; }
 
-  .order-card { background: var(--bg-white); border-radius: var(--radius-md); padding: 16px; margin: 12px 16px; cursor: pointer; box-shadow: var(--shadow-sm); transition: box-shadow .15s; }
-  .order-card:hover { box-shadow: var(--shadow-md); }
+  .order-card { background: #ffffff; border: 1px solid var(--border); border-radius: var(--radius-md); padding: 16px; margin: 12px 16px; cursor: pointer; box-shadow: var(--shadow-sm); transition: box-shadow .15s, border-color .15s; }
+  .order-card:hover { box-shadow: var(--shadow-md); border-color: #cfc2f5; }
   .order-card .row1 { display: flex; justify-content: space-between; align-items: center; }
   .order-card .nm { font-size: 15px; font-weight: 600; }
   .order-card .sub { font-size: 13px; color: var(--text-tertiary); margin-top: 6px; line-height: 1.6; }
 
   /* 商家页 */
-  .seller-card { background: var(--bg-white); border-radius: var(--radius-md); padding: 20px 16px; margin: 16px; box-shadow: var(--shadow-sm); }
+  .seller-card { background: #ffffff; border: 1px solid var(--border); border-radius: var(--radius-md); padding: 20px 16px; margin: 16px; box-shadow: var(--shadow-sm); }
   .seller-card h3 { font-size: 15px; font-weight: 600; margin-bottom: 8px; }
   .seller-card p { font-size: 14px; color: var(--text-secondary); line-height: 1.8; white-space: pre-line; }
 
   /* 搜索条 */
-  .search-wrap { background: var(--bg-white); padding: 16px; display: flex; gap: 10px; max-width: var(--max-width); margin: 0 auto; }
-  .search-wrap input { flex: 1; margin-top: 0; padding: 12px 14px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 15px; }
-  .search-wrap input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0,113,227,.15); }
+  .search-wrap { background: transparent; padding: 16px; display: flex; gap: 10px; max-width: var(--max-width); margin: 0 auto; }
+  .search-wrap input { flex: 1; margin-top: 0; padding: 12px 14px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 15px; background: #ffffff; color: var(--text); box-shadow: var(--shadow-sm); }
+  .search-wrap input:focus { outline: none; border-color: #b39df5; box-shadow: 0 0 0 3px rgba(179,157,245,.20); }
   .search-wrap button {
     border: none;
     border-radius: var(--radius-sm);
     padding: 0 24px;
     color: #fff;
-    background: var(--accent);
+    background: var(--grad);
     font-size: 15px;
-    font-weight: 600;
-    transition: background .15s;
+    font-weight: 700;
+    transition: filter .15s;
+    box-shadow: var(--glow);
   }
-  .search-wrap button:hover { background: var(--accent-hover); }
+  .search-wrap button:hover { filter: brightness(1.04); }
 
   .empty { text-align: center; color: var(--text-tertiary); padding: 60px 20px; font-size: 15px; line-height: 1.8; }
   .note {
-    background: rgba(0,113,227,.08);
-    color: var(--accent);
+    background: rgba(179,157,245,.12);
+    color: #6d5bd0;
     padding: 12px 16px;
     border-radius: var(--radius-sm);
     font-size: 13px;
@@ -636,7 +762,7 @@
     width: 36px;
     height: 36px;
     border-radius: 50%;
-    background: var(--bg);
+    background: #f2eef9;
     border: none;
     font-size: 18px;
     color: var(--text-secondary);
@@ -644,8 +770,48 @@
     align-items: center;
     justify-content: center;
   }
-  .sheet .close-btn:hover { background: var(--border); color: var(--text); }
+  .sheet .close-btn:hover { background: #e9e2f6; color: var(--text); }
+
+  /* 购买流程（三步） */
+  .section-title { font-size: 19px; font-weight: 600; padding: 8px 16px 12px; max-width: var(--max-width); margin: 0 auto; }
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; padding: 0 16px 8px; max-width: var(--max-width); margin: 0 auto; }
+  @media (max-width: 767px) { .steps { grid-template-columns: 1fr; } }
+  .step { background: #ffffff; border: 1px solid var(--border); border-radius: var(--radius-md); padding: 16px; box-shadow: var(--shadow-sm); }
+  .step-num { width: 30px; height: 30px; border-radius: 50%; background: var(--grad); color: #fff; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; box-shadow: 0 4px 12px rgba(167,139,250,.30); }
+  .step h4 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+  .step p { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+  .note-card { background: #ffffff; border: 1px solid var(--border); border-radius: var(--radius-md); padding: 18px 16px; margin: 12px 16px 24px; max-width: var(--max-width); box-shadow: var(--shadow-sm); }
+  @media (min-width: 1200px) { .note-card { margin-left: auto; margin-right: auto; } }
+  .note-card h3 { font-size: 15px; font-weight: 600; margin-bottom: 8px; }
+  .note-card ul { list-style: none; }
+  .note-card li { font-size: 14px; color: var(--text-secondary); line-height: 1.9; padding-left: 18px; position: relative; }
+  .note-card li::before { content: ''; position: absolute; left: 2px; top: 11px; width: 6px; height: 6px; border-radius: 50%; background: var(--grad); }
+  .cap-list { margin-top: 14px; border-top: 1px solid var(--divider); }
+  .cap-list .cap { display: flex; align-items: baseline; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--divider); font-size: 14px; }
+  .cap-list .cap:last-child { border-bottom: none; }
+  .cap .mark { flex-shrink: 0; width: 20px; height: 20px; border-radius: 50%; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; transform: translateY(3px); }
+  .cap .mark.ok { background: #e0f6ec; color: #1f7a54; }
+  .cap .mark.no { background: #fdecef; color: #b03a4b; }
+  .cap b { font-weight: 600; }
+  .cap span { color: var(--text-secondary); }
+  .hero-note { font-size: 13px; color: var(--text-tertiary); margin-top: 16px; }
+  .sheet-step { font-size: 12px; font-weight: 600; letter-spacing: .12em; color: #8b7cf6; margin-bottom: 10px; }
+  .account-hero { background: linear-gradient(180deg, rgba(179,157,245,.14), rgba(179,157,245,.04)); border: 1px solid #d9cdf5; border-radius: var(--radius-md); padding: 18px 16px; margin: 12px 0; }
+  .account-hero h3 { font-size: 17px; font-weight: 700; margin-bottom: 2px; }
+  .account-hero .ah-sub { font-size: 13px; color: var(--text-secondary); margin-bottom: 12px; }
+  .acc-row { display: flex; align-items: center; gap: 8px; background: #ffffff; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 12px; margin-top: 8px; }
+  .acc-row .kv-label { min-width: 64px; flex-shrink: 0; }
+  .acc-row code { flex: 1; min-width: 0; font-size: 15px; padding: 0; }
+  .acc-row a { flex: 1; min-width: 0; word-break: break-all; }
+  .acc-row button { flex-shrink: 0; margin-top: 0; }
+  .login-steps { margin: 14px 0 0; padding: 12px 12px 4px; background: #ffffff; border: 1px solid var(--border); border-radius: var(--radius-sm); }
+  .login-steps h4 { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+  .login-steps ol { margin: 0 0 8px 20px; }
+  .login-steps li { font-size: 13px; color: var(--text-secondary); line-height: 1.9; }
+  .thumb, .detail-poster { font-weight: 700; }
+
 </style>
+
 </head>
 <body>
 <div id="app"></div>
@@ -665,9 +831,32 @@ let currentOrder = null;
 const $ = (s) => document.querySelector(s);
 function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
 function statusLabel(s) {
-  return { pending: '待付款', paid: '待确认收款', delivered: '已发货', cancelled: '已取消' }[s] || s;
+  return { pending: '待付款', paid: '待确认收款', delivered: '已发账号', cancelled: '已取消' }[s] || s;
 }
 function statusClass(s) { return 'status-pill st-' + s; }
+function stockText(it) {
+  if (it.stock <= 0) return '缺货补货中';
+  if (it.stock <= 2) return '仅剩 ' + it.stock + ' 件';
+  return '库存 ' + it.stock + ' 件';
+}
+// 购买流程（三步），首页与详情页共用
+function stepsHtml() {
+  return `<div class="section-title">购买流程</div>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><h4>选购下单</h4><p>填写你的邮箱，选择微信或支付宝，确认下单。</p></div>
+    <div class="step"><div class="step-num">2</div><h4>扫码付款</h4><p>扫码支付 ¥10，付款后点「我已付款」。</p></div>
+    <div class="step"><div class="step-num">3</div><h4>自动发卡</h4><p>确认收款后，账号自动发放到订单页，复制邮箱密码即可登录。</p></div>
+  </div>`;
+}
+// 购买前请确认，首页与详情页共用
+function confirmCardHtml() {
+  return `<div class="note-card"><h3>购买前请确认</h3><ul>
+    <li>支持 AI 对话与视频生成，10 亿 tokens 永不过期。</li>
+    <li>暂不支持语音通话（账号地区限制）。</li>
+    <li>账号一经发出不支持退款，请确认后再下单。</li>
+    <li>收到账号后请尽快登录并修改密码。</li>
+  </ul></div>`;
+}
 
 async function api(path, opts) {
   const r = await fetch(path, opts);
@@ -678,7 +867,8 @@ async function api(path, opts) {
 
 // ---------- 首页 ----------
 function renderHome() {
-  const cats = [['', '综合'], ...Object.entries({ skin: '武器皮肤', crate: '补给箱', outfit: '服装', emote: '表情', key: '激活码' })];
+  const cats = [['', '全部']];
+  for (const it of allItems) { if (!cats.some(([k]) => k === it.category)) cats.push([it.category, it.categoryLabel || it.category]); }
   let list = allItems;
   if (curTab === 'goods' && curCat) list = list.filter((it) => it.category === curCat);
   if (curTab === 'search' && searchQuery) {
@@ -692,44 +882,42 @@ function renderHome() {
         <h3>${esc(it.name)}${it.stock <= 0 ? ' <span class="oos">缺货</span>' : ''}</h3>
         ${it.autoDeliver ? '<span class="tag-auto">✓ 自动发货</span>' : ''}
         <div class="price"><small>¥</small>${it.price}</div>
-        <div class="meta-line">${esc(it.game)}${it.stock > 0 ? ' · 库存 ' + it.stock + ' 件' : ' · 补货中'}${it.sales ? ' · 已售 ' + it.sales : ''}</div>
+        <div class="meta-line">${esc(it.game)} · ${stockText(it)}${it.sales ? ' · 已售 ' + it.sales : ''}</div>
       </div>
-    </div>`).join('') : `<div class="empty">没有找到相关商品<br>换个关键词试试</div>`;
+    </div>`).join('') : `<div class="empty">店里暂时没有商品，正在补货中<br>请稍后再来看看</div>`;
 
   $('#app').innerHTML = `
   <div class="topbar">
-    <div class="logo">${esc(SETTINGS.shopName || '小铺子')}<small>专业数字卡密自动交易平台</small></div>
+    <div class="logo"><span class="logo-badge">M</span><span class="logo-text">${esc(SETTINGS.shopName || '小铺子')}<small>Muse 账号 · 自动发卡</small></span></div>
     <button class="obtn" onclick="goOrder()">订单查询</button>
     <button class="menu-btn" onclick="openMenu()">☰</button>
   </div>
   <div class="hero">
-    <h1>小铺子。</h1>
-    <p>好物，轻松购。PUBG 道具与 Steam 激活码，自动发卡。</p>
+    <div class="hero-eyebrow">MUSE · AI 账号</div>
+    <h1>Muse 账号<span class="grad">10亿 tokens</span></h1>
+    <p>一个账号，10 亿 tokens，永不过期。支持视频生成，付款确认后自动发卡。</p>
+    <div class="hero-chips"><span>10亿 tokens</span><span>永不过期</span><span>能生成视频</span><span>自动发货</span></div>
+    <p class="hero-note">暂不支持语音通话（账号地区限制），下单前请确认。</p>
     <a class="contact-link" onclick="openContact()">联系客服</a>
   </div>
-  <div class="marquee">📢 <span>${esc(SETTINGS.announcement || '')}</span></div>
+  <div class="marquee"><i class="mq-dot"></i><span>${esc(SETTINGS.announcement || '')}</span></div>
   <div class="tabs">
-    <button class="${curTab === 'goods' ? 'active' : ''}" onclick="switchTab('goods')">宝贝</button>
-    <button class="${curTab === 'seller' ? 'active' : ''}" onclick="switchTab('seller')">商家</button>
-    <button class="${curTab === 'search' ? 'active' : ''}" onclick="switchTab('search')">搜索</button>
+    <button class="${curTab === 'goods' ? 'active' : ''}" onclick="switchTab('goods')">商品</button>
+    <button class="${curTab === 'seller' ? 'active' : ''}" onclick="switchTab('seller')">店铺</button>
   </div>
-  ${curTab === 'search' ? `
-    <div class="search-wrap">
-      <input type="text" id="searchInput" placeholder="搜索店内商品" value="${esc(searchQuery)}">
-      <button onclick="doSearch()">搜索</button>
-    </div>
-    <p style="padding:4px 14px 0;font-size:12px;color:var(--text-tertiary)">搜本店宝贝 / 输入商品名称或关键词，快速找到心仪宝贝</p>` : ''}
   ${curTab === 'seller' ? `
-    <div class="seller-card"><h3>🏪 店铺信息</h3>
-      <p>店名：${esc(SETTINGS.shopName || '小铺子')}\n所在地：中国\n主营：游戏道具、Steam 激活码，自动发卡\n客服：${SETTINGS.contactQQ ? 'QQ ' + esc(SETTINGS.contactQQ) : ''}${SETTINGS.contactWechat ? '　微信 ' + esc(SETTINGS.contactWechat) : ''}${!SETTINGS.contactQQ && !SETTINGS.contactWechat ? '请点右上角“联系客服”' : ''}</p>
+    <div class="seller-card"><h3>店铺信息</h3>
+      <p>店名：${esc(SETTINGS.shopName || '小铺子')}\n所在地：中国\n主营：Muse AI 账号（10 亿 tokens），付款确认后自动发卡\n客服：${SETTINGS.contactQQ ? 'QQ ' + esc(SETTINGS.contactQQ) : ''}${SETTINGS.contactWechat ? '　微信 ' + esc(SETTINGS.contactWechat) : ''}${!SETTINGS.contactQQ && !SETTINGS.contactWechat ? '请点右上角“联系客服”' : ''}</p>
     </div>
-    <div class="seller-card"><h3>📢 店铺公告</h3><p>${esc(SETTINGS.announcement || '')}</p></div>
-    <div class="seller-card"><h3>📋 经营信息</h3><p>本店为个人小店，仅出售虚拟数字商品（游戏道具、激活码），不涉及实物发货。激活码类商品付款确认后自动发卡，卡密一经发出不支持退款，请下单前确认好商品。</p></div>` : `
+    <div class="seller-card"><h3>店铺公告</h3><p>${esc(SETTINGS.announcement || '')}</p></div>
+    <div class="seller-card"><h3>经营信息</h3><p>本店为个人小店，只卖 Muse AI 账号虚拟商品，不涉及实物发货。账号付款确认后自动发放到订单页。账号一经发出不支持退款，请下单前确认功能说明：支持视频生成，暂不支持语音通话。</p></div>` : `
     <div class="cats">${cats.map(([k, label]) => `
       <button class="${curCat === k ? 'active' : ''}" onclick="setCat('${k}')">${label} <span class="n">${k === '' ? allItems.length : (catCounts[k] || 0)}</span></button>`).join('')}
     </div>
-    <div class="grid">${cards}</div>`}
-  <footer>小铺子 · 数字卡密自动交易<br>下单即表示同意店内公告与售后说明 · 卡密商品一经发出不支持退款<br><a href="/admin.html" style="color:var(--text-tertiary)">店主管理后台</a></footer>`;
+    <div class="grid">${cards}</div>
+    ${stepsHtml()}
+    ${confirmCardHtml()}`}
+  <footer>小铺子 · Muse 账号专卖<br>10 亿 tokens · 永不过期 · 付款确认后自动发卡<br>账号一经发出不支持退款，下单前请确认功能说明<br><a href="/admin.html" style="color:var(--text-tertiary)">店主管理后台</a></footer>`;
   const si = $('#searchInput');
   if (si) si.addEventListener('keydown', (e) => { if (e.key === 'Enter') doSearch(); });
 }
@@ -743,38 +931,38 @@ function goDetail(id) { location.hash = '#/goods/' + id; }
 function renderDetail() {
   const it = allItems.find((x) => x.id === detailId);
   if (!it) { location.hash = '#/'; return; }
-  const recs = allItems.filter((x) => x.id !== it.id && x.category === it.category).slice(0, 6);
-  const recList = recs.length ? recs : allItems.filter((x) => x.id !== it.id).slice(0, 6);
   $('#app').innerHTML = `
   <div class="detail-top"><button onclick="location.hash='#/'">‹</button><h2>${esc(it.name)}</h2></div>
   <div class="detail-poster" style="background:${it.color}">${it.emoji}</div>
   <div class="shop-row">
-    <div class="avatar">🛒</div><div class="nm">${esc(SETTINGS.shopName || '小铺子')}</div>
+    <div class="avatar">M</div><div class="nm">${esc(SETTINGS.shopName || '小铺子')}</div>
     <button onclick="location.hash='#/'">进店逛逛</button>
   </div>
   <div class="detail-body">
     <h2>${esc(it.name)} ${it.autoDeliver ? '<span class="tag-auto">✓ 自动发货</span>' : ''}</h2>
     <div class="price"><small>¥</small>${it.price}</div>
-    <p style="font-size:13px;color:var(--text-tertiary)">${esc(it.game)}${it.platform ? ' · ' + esc(it.platform) : ''}${it.region ? ' · 适用：' + esc(it.region) : ''} · ${it.stock > 0 ? '库存 ' + it.stock + ' 件' : '缺货补货中'}${it.sales ? ' · 已售 ' + it.sales : ''}</p>
+    <p style="font-size:13px;color:var(--text-tertiary)">${esc(it.game)}${it.platform ? ' · ' + esc(it.platform) : ''}${it.region ? ' · 适用：' + esc(it.region) : ''} · ${stockText(it)}${it.sales ? ' · 已售 ' + it.sales : ''}</p>
+    <div class="feat-strip"><span>10亿 tokens</span><span>永不过期</span><span>能生成视频</span><span>自动发货</span></div>
   </div>
-  <div class="desc-box"><h3>宝贝描述</h3>
+  <div class="desc-box"><h3>账号说明</h3>
     <p>${esc(it.desc)}</p>
-    <div class="warn">${it.autoDeliver
-      ? '⚠️ 卡密每单一张，下单后请按付款页提示扫码付款，店主确认收款后自动发卡。\n卡密一经发出不支持退款，请下单前确认好商品。\n请妥善保管卡密，勿向他人泄露。'
-      : '⚠️ 虚拟道具商品，付款确认后请联系客服提供游戏 ID，由店主手动发货。\n请下单前确认好商品类型与价格。'}</div>
+    <div class="cap-list">
+      <div class="cap"><span class="mark ok">✓</span><b>AI 对话</b><span>10 亿 tokens，永不过期</span></div>
+      <div class="cap"><span class="mark ok">✓</span><b>视频生成</b><span>支持生成视频</span></div>
+      <div class="cap"><span class="mark no">✕</span><b>语音通话</b><span>暂不支持（账号地区限制）</span></div>
+    </div>
+    <div class="warn">购买须知：每单发放 1 个账号，含邮箱、密码与接验证码链接。付款后请按付款页提示扫码，确认收款后账号自动发放到订单页。
+账号一经发出不支持退款，请下单前确认功能说明。
+收到账号后请尽快登录并修改密码，不要向他人泄露邮箱、密码与验证码。</div>
   </div>
-  <div class="rec-title">宝贝推荐</div>
-  <div class="grid" style="padding-bottom:90px">${recList.map((r) => `
-    <div class="card" onclick="goDetail('${r.id}')">
-      <div class="thumb" style="background:${r.color}">${r.emoji}</div>
-      <div class="info"><h3>${esc(r.name)}</h3>
-      <div class="price"><small>¥</small>${r.price}</div></div>
-    </div>`).join('')}</div>
+  ${stepsHtml()}
+  ${confirmCardHtml()}
+  <div style="height:90px"></div>
   <div class="buybar">
-    <button class="bb" onclick="location.hash='#/'"><span>🏪</span>店铺</button>
-    <button class="bb" onclick="goOrder()"><span>📋</span>订单</button>
-    <button class="bb" onclick="openContact()"><span>💬</span>客服</button>
-    <button class="buy-now" ${it.stock <= 0 ? 'disabled' : ''} onclick="openBuy('${it.id}')">${it.stock <= 0 ? '缺货补货中' : '立即购买'}</button>
+    <button class="bb" onclick="location.hash='#/'"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>店铺</button>
+    <button class="bb" onclick="goOrder()"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>订单</button>
+    <button class="bb" onclick="openContact()"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></span>客服</button>
+    <button class="buy-now" ${it.stock <= 0 ? 'disabled' : ''} onclick="openBuy('${it.id}')">${it.stock <= 0 ? '缺货补货中' : '立即购买 ¥' + it.price}</button>
   </div>`;
   window.scrollTo(0, 0);
 }
@@ -791,30 +979,33 @@ function renderBuySheet() {
   const it = b.item;
   $('#sheet').innerHTML = `
   <div class="grab"></div>
+  <div class="sheet-step">第 1 步 · 确认订单</div>
   <div class="mini-goods">
     <div class="thumb" style="background:${it.color}">${it.emoji}</div>
     <div class="t"><b>${esc(it.name)}</b><span class="price" style="font-size:18px"><small>¥</small>${it.price}</span> ${it.autoDeliver ? '<span class="tag-auto">✓ 自动发货</span>' : ''}</div>
     <button class="btn-ghost" style="border:none;font-size:20px" onclick="closeModal()">✕</button>
   </div>
-  <div class="desc-scroll">${esc(it.desc)}\n${it.autoDeliver ? '⚠️ 卡密一经发出不支持退款，请确认好再下单。' : '⚠️ 虚拟道具，付款后联系客服发货。'}</div>
+  <div class="desc-scroll">${esc(it.desc)}\n账号一经发出不支持退款。请确认功能说明：支持视频生成，暂不支持语音通话。</div>
   <h3>数量</h3>
   <div class="stepper">
     <button onclick="chQty(-1)" ${b.qty <= 1 ? 'disabled' : ''}>−</button>
     <span class="qty">${b.qty}</span>
     <button onclick="chQty(1)" ${b.qty >= it.stock ? 'disabled' : ''}>＋</button>
-    <span style="font-size:12px;color:var(--text-tertiary);margin-left:8px">库存 ${it.stock} 件</span>
+    <span style="font-size:12px;color:var(--text-tertiary);margin-left:8px">${stockText(it)}</span>
   </div>
+  ${it.stock <= 1 ? '<div class="hint">库存仅剩 1 件，每单限购 1 个账号。</div>' : ''}
   <h3>联系邮箱</h3>
   <input type="email" id="buyEmail" placeholder="用于接收发货信息及订单通知" value="${esc(b.email)}">
-  <div class="hint">邮箱将用于接收发货信息及订单通知，也可凭邮箱查单。</div>
+  <div class="hint">用来接收订单通知，也可凭这个邮箱查单。请填你自己的常用邮箱。</div>
   <h3>支付方式</h3>
   <div class="pay-methods">
-    <button class="${b.payMethod === 'wechat' ? 'sel' : ''}" onclick="setPay('wechat')">💬 微信支付</button>
-    <button class="${b.payMethod === 'alipay' ? 'sel' : ''}" onclick="setPay('alipay')">💙 支付宝支付</button>
+    <button class="${b.payMethod === 'wechat' ? 'sel' : ''}" onclick="setPay('wechat')">微信支付</button>
+    <button class="${b.payMethod === 'alipay' ? 'sel' : ''}" onclick="setPay('alipay')">支付宝支付</button>
   </div>
+  <div class="hint">扫码支付 ¥10，付款后点「我已付款」，确认收款后自动发卡。</div>
   <div class="foot">
     <div class="total">合计 <b>¥${(it.price * b.qty).toFixed(2)}</b> <span style="font-size:12px;color:var(--text-tertiary)">商品金额 ¥${(it.price * b.qty).toFixed(2)}</span></div>
-    <button class="btn-orange" onclick="confirmBuy()">确认支付</button>
+    <button class="btn-orange" onclick="confirmBuy()">确认下单</button>
   </div>`;
   $('#modal').classList.add('open');
 }
@@ -845,13 +1036,14 @@ function renderPaySheet(d) {
   const payName = d.payMethod === 'wechat' ? '微信支付' : '支付宝支付';
   $('#sheet').innerHTML = `
   <div class="grab"></div>
+  <div class="sheet-step" style="text-align:center">第 2 步 · 扫码付款</div>
   <h2 style="text-align:center">扫码付款 · ${payName}</h2>
   <div class="order-no">订单号：<b>${d.orderNo}</b>　实付 <b>¥${Number(d.total).toFixed(2)}</b></div>
   <div class="pay-qr">${d.qr ? `<img src="${d.qr}" alt="收款码">` : '<div class="noqr">店主尚未上传收款码<br>请联系客服索要收款方式</div>'}</div>
   <p class="hint" style="text-align:center">请用${payName}扫码支付 ¥${Number(d.total).toFixed(2)}，付完点下方“我已付款”</p>
   <h3>交易单号（选填，方便店主对账）</h3>
   <input type="text" id="txidInput" placeholder="微信/支付宝账单详情里的交易单号后几位">
-  <div class="note">付款后请点“我已付款”。${SETTINGS.autoDeliver ? '系统将自动发卡，卡密会直接显示在下方。' : '店主确认收款后会自动发卡，卡密会显示在订单页（一般几分钟内）。'}</div>
+  <div class="note">付款后请点「我已付款」。${SETTINGS.autoDeliver ? '系统自动发卡，账号会直接显示在订单页。' : '店主确认收款后会自动发卡，账号会显示在订单页，一般几分钟内，请留意订单状态。'}</div>
   <div class="foot">
     <button class="btn-ghost" onclick="closeModal(); goOrderNo('${d.orderNo}')">稍后付款</button>
     <button class="btn-orange" style="flex:1" onclick="markPaid('${d.orderNo}')">我已付款</button>
@@ -873,16 +1065,16 @@ function goOrderNo(no) { location.hash = '#/order/' + no; }
 function renderOrderQuery() {
   $('#app').innerHTML = `
   <div class="detail-top"><button onclick="location.hash='#/'">‹</button><h2>订单查询</h2></div>
-  <div style="background:var(--bg-white);padding:18px 14px;text-align:center">
-    <h2 style="font-size:18px">轻松查询订单，即刻享受自动交易</h2>
-    <p style="font-size:13px;color:var(--text-secondary);margin:6px 0 14px">输入邮箱地址或订单号，快速查看订单状态和详情</p>
-    <input type="text" id="queryInput" placeholder="请输入下单邮箱地址或订单号" style="margin-top:0;padding:12px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:15px;width:100%;max-width:400px">
+  <div style="background:var(--bg-white);border:1px solid var(--border);border-radius:var(--radius-md);margin:16px;padding:18px 14px;text-align:center">
+    <h2 style="font-size:18px">查询我的订单</h2>
+    <p style="font-size:13px;color:var(--text-secondary);margin:6px 0 14px">输入下单时填的邮箱或订单号，查看付款状态和已发放的账号</p>
+    <input type="text" id="queryInput" placeholder="下单邮箱 或 订单号（XP 开头）" style="margin-top:0;padding:12px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:15px;width:100%;max-width:400px">
     <button class="btn-orange" style="width:100%;max-width:400px;margin-top:10px" onclick="doQuery()">查询订单</button>
-    <p class="hint" style="margin-top:8px">例如：example@email.com 或 XP1234567890</p>
+    <p class="hint" style="margin-top:8px">例如：your@email.com 或 XP1234567890</p>
   </div>
   <div id="queryResult"></div>
-  <div class="seller-card"><h3>🛡️ 防骗提醒</h3><p>本店不会主动要求私下转账、索要验证码或引导站外交易。如对订单有疑问，请在24小时内联系客服反馈，逾期请自行与店主协商解决。</p></div>
-  <footer>小铺子 · 数字卡密自动交易</footer>`;
+  <div class="seller-card"><h3>防骗提醒</h3><p>本店只在站内交易。本店不会主动要求私下转账、索要密码或验证码，也不会引导你去站外付款。凡是让你先转账再发账号的，都是骗子。如对订单有疑问，请在 24 小时内联系客服并提供订单号。</p></div>
+  <footer>小铺子 · Muse 账号专卖</footer>`;
 }
 async function doQuery() {
   const v = ($('#queryInput') || {}).value.trim();
@@ -914,22 +1106,28 @@ async function loadOrderDetail(orderNo) {
 }
 function renderOrderDetail(o, fromQuery) {
   const codesHtml = o.status === 'delivered' && o.codes && o.codes.length ? `
-    <div class="seller-card"><h3>🔑 您的卡密（请妥善保管）</h3>
+    <div class="seller-card"><h3>第 3 步 · 账号已发放</h3>
       ${o.codes.map((c) => {
         if (c.email) {
-          return `<div class="keybox"><div style="text-align:left;font-size:14px;line-height:2">
-            <div>📧 邮箱：<code>${esc(c.email)}</code> <button onclick="copyText(this.getAttribute('data-v'))" data-v="${esc(c.email)}">复制</button></div>
-            <div>🔑 密码：<code>${esc(c.password || '')}</code> <button onclick="copyText(this.getAttribute('data-v'))" data-v="${esc(c.password || '')}">复制</button></div>
-            <div>📩 接验证码：<a href="${esc(c.inboxUrl || '')}" target="_blank" rel="noopener">点这里查看验证码</a> <button onclick="copyText(this.getAttribute('data-v'))" data-v="${esc(c.inboxUrl || '')}">复制链接</button></div>
-          </div><div class="kwarn">请尽快使用，勿向他人泄露；登录 Muse 收不到验证码时，点上面的接验证码链接查看。</div></div>`;
+          return `<div class="account-hero"><h3>你的 Muse 账号</h3><div class="ah-sub">请尽快登录并修改密码，妥善保管。</div>
+            <div class="acc-row"><span class="kv-label">账号邮箱</span><code>${esc(c.email)}</code><button onclick="copyText(this.getAttribute('data-v'))" data-v="${esc(c.email)}">复制</button></div>
+            <div class="acc-row"><span class="kv-label">登录密码</span><code>${esc(c.password || '')}</code><button onclick="copyText(this.getAttribute('data-v'))" data-v="${esc(c.password || '')}">复制</button></div>
+            <div class="acc-row"><span class="kv-label">接验证码</span><a href="${esc(c.inboxUrl || '')}" target="_blank" rel="noopener">打开查看验证码</a><button onclick="copyText(this.getAttribute('data-v'))" data-v="${esc(c.inboxUrl || '')}">复制链接</button></div>
+            <div class="login-steps"><h4>如何登录</h4><ol>
+              <li>打开 muse.ai，点登录。</li>
+              <li>输入上面的账号邮箱和密码。</li>
+              <li>如需验证码，点「接验证码」查看最新验证码，填入即可。</li>
+              <li>登录成功后请尽快修改密码。</li>
+            </ol></div>
+            <div class="kwarn">这个账号只发给你一个人。不要把邮箱、密码、验证码告诉任何人，也不要在站外交易。</div></div>`;
         }
-        return `<div class="keybox"><code>${esc(c.code)}</code>${c.demo ? '<div class="kwarn">演示卡密，仅供展示，无法真实兑换</div>' : '<div class="kwarn">请尽快使用，勿向他人泄露</div>'}<button onclick="copyText('${esc(c.code)}')">复制卡密</button></div>`;
+        return `<div class="keybox"><code>${esc(c.code)}</code>${c.demo ? '<div class="kwarn">演示码，仅供展示，无法真实兑换</div>' : '<div class="kwarn">请尽快使用，勿向他人泄露</div>'}<button onclick="copyText('${esc(c.code)}')">复制</button></div>`;
       }).join('')}
     </div>` : '';
-  const tip = o.status === 'pending' ? '<div class="note">订单待付款：请返回商品页重新下单，或联系客服。</div>'
-    : o.status === 'paid' ? '<div class="note">已收到您的“我已付款”，店主确认收款后会自动发卡，卡密会显示在这里，请稍等片刻再刷新查看。</div>'
-    : o.status === 'delivered' && !o.isKey ? '<div class="note">虚拟道具商品已确认，请联系客服提供游戏 ID 安排发货。</div>'
-    : o.status === 'cancelled' ? '<div class="note">订单已取消，如有疑问请联系客服。</div>' : '';
+  const tip = o.status === 'pending' ? '<div class="note">订单还没付款：请回到商品页重新下单，或联系客服。</div>'
+    : o.status === 'paid' ? '<div class="note">已收到你的「我已付款」，确认收款后账号会自动发放到这里，请稍等片刻再刷新查看。</div>'
+    : o.status === 'delivered' && !o.isKey ? '<div class="note">如登录遇到问题，请联系客服并提供订单号。</div>'
+    : o.status === 'cancelled' ? '<div class="note">订单已取消。如已付款但订单被取消，请联系客服并提供订单号。</div>' : '';
   $('#app').innerHTML = `
   <div class="detail-top"><button onclick="location.hash='#/order'">‹</button><h2>订单详情</h2></div>
   <div class="seller-card">
@@ -950,10 +1148,10 @@ function copyText(t) {
 function openMenu() {
   $('#sheet').innerHTML = `
   <div class="grab"></div><h2>菜单</h2>
-  <button class="menu-item" onclick="closeModal(); goOrder()">📋 订单查询</button>
-  <button class="menu-item" onclick="closeModal(); openContact()">💬 联系客服</button>
-  <button class="menu-item" onclick="closeModal(); switchTab('seller'); location.hash='#/'">🏪 商家信息</button>
-  <button class="menu-item" onclick="closeModal(); showAnnounce()">📢 店铺公告</button>`;
+  <button class="menu-item" onclick="closeModal(); goOrder()">订单查询</button>
+  <button class="menu-item" onclick="closeModal(); openContact()">联系客服</button>
+  <button class="menu-item" onclick="closeModal(); switchTab('seller'); location.hash='#/'">店铺信息</button>
+  <button class="menu-item" onclick="closeModal(); showAnnounce()">店铺公告</button>`;
   $('#modal').classList.add('open');
 }
 function openContact() {
@@ -963,13 +1161,13 @@ function openContact() {
   <p class="hint">在线客服：请通过以下方式联系店主（工作时间一般几分钟内回复）</p>
   ${qq ? `<div class="order-card" style="margin:10px 0">QQ：<b>${esc(qq)}</b> <button class="btn-ghost" style="float:right;padding:5px 12px" onclick="copyText('${esc(qq)}')">复制</button></div>` : ''}
   ${wx ? `<div class="order-card" style="margin:10px 0">微信：<b>${esc(wx)}</b> <button class="btn-ghost" style="float:right;padding:5px 12px" onclick="copyText('${esc(wx)}')">复制</button></div>` : ''}
-  ${!qq && !wx ? '<div class="note">店主尚未填写客服联系方式，请通过订单页留言或稍后再来。</div>' : ''}
+  ${!qq && !wx ? '<div class="note">店主尚未填写客服联系方式，请稍后再来，或在查单页凭订单号查询订单状态。</div>' : ''}
   <div class="foot"><button class="btn-orange" style="flex:1" onclick="closeModal()">知道了</button></div>`;
   $('#modal').classList.add('open');
 }
 function showAnnounce() {
   $('#sheet').innerHTML = `
-  <div class="grab"></div><h2>📢 店铺公告</h2>
+  <div class="grab"></div><h2>店铺公告</h2>
   <p style="font-size:14px;line-height:1.8;white-space:pre-line">${esc(SETTINGS.announcement || '')}</p>
   <div class="foot"><button class="btn-orange" style="flex:1" onclick="closeModal()">我知道了</button></div>`;
   $('#modal').classList.add('open');
@@ -996,7 +1194,7 @@ async function init() {
     allItems = d.items;
     catCounts = d.counts || {};
   } catch (e) {
-    $('#app').innerHTML = '<div class="empty">小铺子暂时打不开，请稍后再试<br>' + esc(e.message) + '</div>';
+    $('#app').innerHTML = '<div class="empty">页面暂时打不开，请稍后再试<br>' + esc(e.message) + '</div>';
     return;
   }
   route();
